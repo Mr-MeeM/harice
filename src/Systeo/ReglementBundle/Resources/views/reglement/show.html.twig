@@ -1,0 +1,229 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <script  src="{{asset('bundles/systeodepense/js/main.js') }}" ></script> 
+    <script  src="{{asset('bundles/systeobanque/js/main.js') }}" ></script>
+    <script  src="{{ asset('bundles/systeofile/js/main.js') }}" ></script>
+    <script language="javascript">
+        var AjaxFileConf = {
+                container:'#ajax_file_container',
+                entity:'Reglement',
+                entity_id:'{{ reglement.id }}',
+                uploadPath:'{{ path('addajaxfile') }}',
+                diplayDocs:1,
+                displayGallery:1,
+                docsGaleryLoadingPath:'{{path('ajaxloadfiles')}}'
+            };
+        
+        load_view_ajax_file();
+    </script>
+    <fieldset>
+            <legend>Détails d'un réglement</legend>
+    </fieldset>
+    <div class="btn_add pull-right">
+        <ul id='show_action_buttons'>
+            <li><a href="{{ path('reglement_index') }}?direction={{reglement.direction}}"  class="btn btn-info">Liste des réglements <span class="glyphicon glyphicon-th-list"></span></a></li>
+            <li><a href="{{ path('reglement_edit', { 'id': reglement.id }) }}"  class="btn btn-warning">Modifier  <span class="glyphicon glyphicon-edit"></a></li>
+            <li>
+                {{ form_start(delete_form) }}
+                
+                <button class='btn btn-danger delete_form_button' data-msg="Voulez vous vraiement supprimer ce réglement?" type="button">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>   
+    <div class="row">
+        <div class="col-lg-6">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Émis / Reçu</th>
+                        <td>
+                            {%if reglement.direction == "out" %}
+                                <span class='label label-danger'>Émis</span>
+                            {%else%}
+                                <span class='label label-success'>Reçus</span>
+                            {%endif%}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Tier</th>
+                        <td>{%if reglement.tier%}<a href="{{path('tier_show',{'id':reglement.tier.id})}}">{{reglement.tier.name}}</a>{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <th>Libellé</th>
+                        <td>{{reglement.name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Type</th>
+                        <td>{{reglement.type}}</td>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <td>{%if reglement.date%}{{reglement.date|date('d/m/Y')}}{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <th>Montant</th>
+                        <td>{%if reglement.montant%}{{reglement.montant|number_format(3, '.', ' ')}}{%endif%}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6" id="ajax_file_container">
+
+        </div>
+    </div>   
+    <div class='row'>
+        {%if reglement.direction == "out" %}
+            <div class='col-lg-6'>
+                {%if reglement.depense%}
+                    {%set depense = reglement.depense%}
+                    <h3>Dépense / Achat</h3>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Catégorie</th>
+                                <td>{{depense.depenseCategory.name}}</td>
+                            </tr>
+                            <tr>
+                                <th>Libellé</th>
+                                <td><a href="{{ path('depense_show', { 'id': depense.id }) }}">{{depense.name}}</a></td>
+                            </tr>
+                             <tr>
+                                <th>Remarque</th>
+                                <td>{{depense.remarque}}</td>
+                            </tr>
+                            <tr>
+                                <th>Date</th>
+                                <td>{%if depense.date%}{{depense.date|date('d/m/Y')}}{%endif%}</td>
+                            </tr>
+                            <tr>
+                                <th>Montant HT</th>
+                                <td>{%if depense.montantHt%}{{depense.montantHt|number_format(3, '.', ' ')}}{%endif%}</td>
+                            </tr>
+                            <tr>
+                                <th>Montant TVA</th>
+                                <td>{%if depense.montantTva%}{{depense.montantTva|number_format(3, '.', ' ')}}{%endif%}</td>
+                            </tr>
+                            <tr>
+                                <th>Montant TTC</th>
+                                <td>{%if depense.montantTtc%}{{depense.montantTtc|number_format(3, '.', ' ')}}{%endif%}</td>
+                            </tr>
+                            {%set class_solde = "solde-non-null"%}
+                            {%if depense.solde == 0%}
+                                {%set class_solde = "solde-null"%}
+                            {%endif%}
+                            <tr class="{{class_solde}}">
+                                <th>Solde</th>
+                                <td>
+                                    {{depense.solde|number_format(3, '.', ' ')}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {%else%}
+                    <div class='alert alert-warning'>
+                        Ce réglement n'est pas affecté à une dépense
+                    </div>
+                {%endif%}
+            </div>
+            
+        {%elseif reglement.direction == "in" %}
+            <div class='col-lg-6'>
+                {%if reglement.piece%}
+                    {%set piece = reglement.piece%}
+                    <h3>Facture / Vente</h3>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Numéro</th>
+                                <td>
+                                    <a href="{{ path('piece_show', { 'id': piece.id }) }}">
+                                        {%set prefix=''%}
+                                        {%if piece.numero != ""%}
+                                            {%for i in 0..(3-piece.numero|length)%}
+                                                {%set prefix=prefix~'0'%}
+                                            {%endfor%}
+                                        {%endif%}
+                                        {{prefix}}{{piece.numero}} / {%if piece.date%}{{piece.date|date('Y')}}{%endif%}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Date</th>
+                                <td>{%if piece.date%}{{piece.date|date('d/m/Y')}}{%endif%}</td>
+                            </tr>
+                            <tr>
+                                <th>Montant HT</th>
+                                <td>{%if piece.montantHt%}{{piece.montantHt|number_format(3, '.', ' ')}}{%endif%}</td>
+                            </tr>
+                            <tr>
+                                <th>Montant TVA</th>
+                                <td>{%if piece.montantTva%}{{piece.montantTva|number_format(3, '.', ' ')}}{%endif%}</td>
+                            </tr>
+                            <tr>
+                                <th>Montant TTC</th>
+                                <td>{%if piece.montantTtc%}{{piece.montantTtc|number_format(3, '.', ' ')}}{%endif%}</td>
+                            </tr>
+                            {%set class_solde = "solde-non-null"%}
+                            {%if piece.solde == 0%}
+                                {%set class_solde = "solde-null"%}
+                            {%endif%}
+                            <tr class="{{class_solde}}">
+                                <th>Solde</th>
+                                <td>
+                                    {{piece.solde|number_format(3, '.', ' ')}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {%else%}
+                    <div class='alert alert-warning'>
+                        Ce réglement n'est pas affecté à une facture.
+                    </div>
+                {%endif%}
+            </div>
+        {%endif%}
+            <div class='col-lg-6'>
+                {%if reglement.banqueOperation%}
+                    {%set op = reglement.banqueOperation%}
+                    <h3>Opération bancaire ou de Caisse</h3>
+                    <table class="table table-striped">
+                        <tr>  
+                            <th>N°</th>
+                            <td>obc-{{op.id}}</td>
+                        </tr>
+                        <tr>
+                            <th>Compte</th>
+                            <td>{{op.banqueCompte.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <td>{%if op.date%}{{op.date|date('d/m/Y')}}{%endif%}</td>
+                        </tr>
+                        <tr>
+                            <th>Date valeur</th>
+                            <td>{%if op.dateValeur%}{{op.dateValeur|date('d/m/Y')}}{%endif%}</td>
+                        </tr>
+                        <tr>
+                            <th>Libellé</th>
+                            <td>{{op.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>Débit</th>
+                            <td>{%if op.debit%}{{op.debit|number_format(3, '.', ' ')}}{%endif%}</td>
+                        </tr>
+                        <tr>
+                            <th>Crédit</th>
+                            <td>{%if op.credit%}{{op.credit|number_format(3, '.', ' ')}}{%endif%}</td>
+                        </tr>
+                    </table>
+                {%else%}
+                    <div class='alert alert-warning'>
+                        Ce réglement n'est pas affecté à une opération bancaire ou de caisse
+                    </div>
+                {%endif%}
+            </div>
+    </div>
+    
+{% endblock %}

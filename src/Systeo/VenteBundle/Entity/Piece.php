@@ -1,0 +1,619 @@
+<?php
+
+namespace Systeo\VenteBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
+/**
+ * Piece
+ *
+ * @ORM\Table(name="piece")
+ * @ORM\Entity(repositoryClass="Systeo\VenteBundle\Repository\PieceRepository")
+ * @ORM\HasLifecycleCallbacks()
+ */
+class Piece
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Systeo\TierBundle\Entity\Tier")
+     * @ORM\JoinColumn(nullable=true)
+     * @Assert\NotBlank(message="Vous devez sélectionner une tier!")
+     */
+    private $tier;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=10)
+     */
+    private $type;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="date", nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
+     */
+    private $date;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="numero", type="integer", nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
+     */
+    private $numero;
+    
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tier_name", type="string", length=255, nullable=true)
+     */
+    private $tierName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tier_adresse", type="string", length=255, nullable=true)
+     */
+    private $tierAdresse;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tier_mf", type="string", length=30, nullable=true)
+     */
+    private $tierMf;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="montant_ht", type="decimal", precision=10, scale=3, nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
+     */
+    private $montantHt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="montant_tva", type="decimal", precision=10, scale=3, nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
+     */
+    private $montantTva;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="montant_timbre", type="decimal", precision=10, scale=3, nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
+     */
+    private $montantTimbre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="montant_ttc", type="decimal", precision=10, scale=3, nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
+     */
+    private $montantTtc;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="solde", type="decimal", precision=10, scale=3, nullable=true)
+     */
+    private $solde;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Systeo\VenteBundle\Entity\PieceLigne", cascade={"persist","remove"}, mappedBy="piece")
+    */
+    private $pieceLignes;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Systeo\ReglementBundle\Entity\Reglement", mappedBy="piece")
+    */
+    private $reglements;
+    
+    /**
+     * @var bool
+     *
+     */
+    private $lignesAreValid;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Piece
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return Piece
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set numero
+     *
+     * @param integer $numero
+     *
+     * @return Piece
+     */
+    public function setNumero($numero)
+    {
+        $this->numero = $numero;
+
+        return $this;
+    }
+
+    /**
+     * Get numero
+     *
+     * @return int
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * Set tierName
+     *
+     * @param string $tierName
+     *
+     * @return Piece
+     */
+    public function setTierName($tierName)
+    {
+        $this->tierName = $tierName;
+
+        return $this;
+    }
+
+    /**
+     * Get tierName
+     *
+     * @return string
+     */
+    public function getTierName()
+    {
+        return $this->tierName;
+    }
+
+    /**
+     * Set tierAdresse
+     *
+     * @param string $tierAdresse
+     *
+     * @return Piece
+     */
+    public function setTierAdresse($tierAdresse)
+    {
+        $this->tierAdresse = $tierAdresse;
+
+        return $this;
+    }
+
+    /**
+     * Get tierAdresse
+     *
+     * @return string
+     */
+    public function getTierAdresse()
+    {
+        return $this->tierAdresse;
+    }
+
+    /**
+     * Set tierMf
+     *
+     * @param string $tierMf
+     *
+     * @return Piece
+     */
+    public function setTierMf($tierMf)
+    {
+        $this->tierMf = $tierMf;
+
+        return $this;
+    }
+
+    /**
+     * Get tierMf
+     *
+     * @return string
+     */
+    public function getTierMf()
+    {
+        return $this->tierMf;
+    }
+
+    /**
+     * Set montantHt
+     *
+     * @param string $montantHt
+     *
+     * @return Piece
+     */
+    public function setMontantHt($montantHt)
+    {
+        $this->montantHt = $montantHt;
+
+        return $this;
+    }
+
+    /**
+     * Get montantHt
+     *
+     * @return string
+     */
+    public function getMontantHt()
+    {
+        return $this->montantHt;
+    }
+
+    /**
+     * Set montantTva
+     *
+     * @param string $montantTva
+     *
+     * @return Piece
+     */
+    public function setMontantTva($montantTva)
+    {
+        $this->montantTva = $montantTva;
+
+        return $this;
+    }
+
+    /**
+     * Get montantTva
+     *
+     * @return string
+     */
+    public function getMontantTva()
+    {
+        return $this->montantTva;
+    }
+
+    /**
+     * Set montantTtc
+     *
+     * @param string $montantTtc
+     *
+     * @return Piece
+     */
+    public function setMontantTtc($montantTtc)
+    {
+        $this->montantTtc = $montantTtc;
+
+        return $this;
+    }
+
+    /**
+     * Get montantTtc
+     *
+     * @return string
+     */
+    public function getMontantTtc()
+    {
+        return $this->montantTtc;
+    }
+
+    /**
+     * Set tier
+     *
+     * @param \Systeo\TierBundle\Entity\Tier $tier
+     *
+     * @return Piece
+     */
+    public function setTier(\Systeo\TierBundle\Entity\Tier $tier = null)
+    {
+        $this->tier = $tier;
+
+        return $this;
+    }
+
+    /**
+     * Get tier
+     *
+     * @return \Systeo\TierBundle\Entity\Tier
+     */
+    public function getTier()
+    {
+        return $this->tier;
+    }
+
+    /**
+     * Set montantTimbre
+     *
+     * @param string $montantTimbre
+     *
+     * @return Piece
+     */
+    public function setMontantTimbre($montantTimbre)
+    {
+        $this->montantTimbre = $montantTimbre;
+
+        return $this;
+    }
+
+    /**
+     * Get montantTimbre
+     *
+     * @return string
+     */
+    public function getMontantTimbre()
+    {
+        return $this->montantTimbre;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->pieceLignes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add pieceLigne
+     *
+     * @param \Systeo\VenteBundle\Entity\PieceLigne $pieceLigne
+     *
+     * @return Piece
+     */
+    public function addPieceLigne(\Systeo\VenteBundle\Entity\PieceLigne $pieceLigne)
+    {
+        $pieceLigne->setPiece($this);
+        $this->pieceLignes[] = $pieceLigne;
+
+        return $this;
+    }
+
+    /**
+     * Remove pieceLigne
+     *
+     * @param \Systeo\VenteBundle\Entity\PieceLigne $pieceLigne
+     */
+    public function removePieceLigne(\Systeo\VenteBundle\Entity\PieceLigne $pieceLigne)
+    {
+        $this->pieceLignes->removeElement($pieceLigne);
+    }
+
+    /**
+     * Get pieceLignes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPieceLignes()
+    {
+        return $this->pieceLignes;
+    }
+
+    /**
+     * Add reglement
+     *
+     * @param \Systeo\ReglementBundle\Entity\Reglement $reglement
+     *
+     * @return Piece
+     */
+    public function addReglement(\Systeo\ReglementBundle\Entity\Reglement $reglement)
+    {
+        $this->reglements[] = $reglement;
+
+        return $this;
+    }
+
+    /**
+     * Remove reglement
+     *
+     * @param \Systeo\ReglementBundle\Entity\Reglement $reglement
+     */
+    public function removeReglement(\Systeo\ReglementBundle\Entity\Reglement $reglement)
+    {
+        $this->reglements->removeElement($reglement);
+    }
+
+    /**
+     * Get reglements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReglements()
+    {
+        return $this->reglements;
+    }
+    
+    
+    /*public function getSolde(){
+        $totalRegelement = 0;
+        
+        $tab_ignore_date = [380];
+        
+        if(!in_array($this->getId(), $tab_ignore_date) && $this->getDate()<new \DateTime('2017-01-01 00:00:00')){
+            return 0;
+        }  
+        
+        
+        foreach($this->getReglements() as $rg):
+            $totalRegelement += $rg->getMontant();
+        endforeach;
+        
+        return ($this->getMontantTtc() - $totalRegelement);
+    }*/
+    
+    
+    /**
+    * toString
+    * @return string
+    */
+   public function __toString() {
+       return 'N°: '.$this->getNumero().
+               ' | Date:'.$this->getDate()->format('d/m/Y').
+               ' | Montant TTC:'.number_format($this->getMontantTtc(),3, '.', ' ').
+               ' | Solde:'.number_format($this->getSolde(),3, '.', ' ');
+   }
+   
+ 
+
+    /**
+     * Set solde
+     *
+     * @param string $solde
+     *
+     * @return Piece
+     */
+    public function setSolde($solde)
+    {
+        $this->solde = $solde;
+
+        return $this;
+    }
+
+    /**
+     * Get solde
+     *
+     * @return string
+     */
+    public function getSolde()
+    {
+        return $this->solde;
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function getCalculatedSolde(){
+        
+        $totalReglement = 0;
+        
+        foreach($this->getReglements() as $reg):
+            $totalReglement += $reg->getMontant();
+        endforeach;
+        
+        return ($this->getMontantTtc() - $totalReglement);
+        
+    }
+    
+    /**
+     * @ORM\PrePersist
+     */
+    public function setSoldeCreation(){
+        
+        if($this->getType()==='Devis'){
+            return;
+        }
+        
+        $this->setSolde($this->montantTtc);
+        return $this;
+    }
+    
+   
+
+    /**
+     * Set lignesAreValid
+     *
+     * @param boolean $lignesAreValid
+     *
+     * @return Piece
+     */
+    public function setLignesAreValid($lignesAreValid)
+    {
+        $this->lignesAreValid = $lignesAreValid;
+
+        return $this;
+    }
+
+    /**
+     * Get lignesAreValid
+     *
+     * @return boolean
+     */
+    public function getLignesAreValid()
+    {
+        foreach($this->getPieceLignes() as $ligne){
+            if(!$ligne->checkIfValid()){
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        // check if the name is actually a fake name
+        if (!$this->getLignesAreValid()) {
+            $context->buildViolation('Tous les champs de toutes les lignes doivent être valides!')
+                ->atPath('lignesAreValid')
+                ->addViolation();
+        }
+        
+       
+        
+        
+    }
+}

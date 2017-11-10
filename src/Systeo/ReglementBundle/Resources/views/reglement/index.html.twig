@@ -1,0 +1,132 @@
+{% extends 'layout.html.twig' %}
+{% block body %}  
+    <fieldset>
+        <legend>{{ 'Liste des réglements émis'}}</legend>
+    </fieldset>
+     
+     <div class="btn_add">
+        <a href="{{ path('reglement_new') }}?direction={{app.request.get('direction')}}"  class="btn btn-success pull-right">Ajouter un réglement <span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+     
+    <div class="clear-both"></div>
+    <form name='Recherche' method="POST" novalidate>
+    <br />
+    <div class='row'>
+            
+            <div class='col-lg-2'>
+                <input name='reglement_search[tier]' placeholder='Tier'  class='form-control' value='{{app.request.get('tier')}}'>
+            </div>
+            <div class='col-lg-2'>
+                <input name='reglement_search[depense]' placeholder='Dépense'  class='form-control' value='{{app.request.get('depense')}}'>
+            </div>
+            <div class='col-lg-2'>
+                <input name='reglement_search[name]' placeholder='Libellé'  class='form-control' value='{{app.request.get('name')}}'>
+            </div>
+            
+            
+            <div class='col-lg-3'>
+                {%set date_debut = ""%}
+                {%set date_fin = ""%}
+                {%if app.request.get('date_debut')%}
+                    {%set date = app.request.get('date_debut')|split('-')%}
+                    {%if date[2] is defined %}{% set date_debut = date[2]~'/'%}{%endif%}
+                    {%if date[1] is defined %}{% set date_debut = date_debut~date[1]~'/'%}{%endif%}
+                    {%if date[0] is defined %}{% set date_debut = date_debut~date[0]%}{%endif%}
+                {%endif%}
+                {%if app.request.get('date_fin')%}
+                    {%set date = app.request.get('date_fin')|split('-')%}
+                    {%if date[2] is defined %}{% set date_fin = date[2]~'/'%}{%endif%}
+                    {%if date[1] is defined %}{% set date_fin = date_fin~date[1]~'/'%}{%endif%}
+                    {%if date[0] is defined %}{% set date_fin = date_fin~date[0]%}{%endif%}
+                {%endif%}
+                <div class='col-lg-6'>
+                    <input name='reglement_search[date_debut]'  placeholder='Date de '  class='form-control datepicker' value='{{date_debut}}'>      
+                </div>
+                <div class='col-lg-6'>
+                    <input name='reglement_search[date_fin]'  placeholder='à'  class='form-control datepicker' value='{{date_fin }}'>      
+                </div>
+            </div>
+            
+            
+    </div>
+    <br />
+    <div class='row'>
+        <div class='col-lg-2'>
+            <input name='reglement_search[montant]'  placeholder='montant'  class='form-control' value='{{app.request.get('montant')}}'>      
+        </div>
+        <div class='col-lg-1' style='margin-left: -25px;'>
+            <select name='reglement_search[montant_comparateur]' class='form-control'>
+                <option {%if app.request.get('montant_comparateur') == "="%}selected{%endif%} value='='>=</option>
+                <option {%if app.request.get('montant_comparateur') == ">="%}selected{%endif%} value='>='>>=</option>
+                <option {%if app.request.get('montant_comparateur') == "<="%}selected{%endif%} value='<='><=</option>
+                <option {%if app.request.get('montant_comparateur') == ">"%}selected{%endif%} value='>'>></option>
+                <option {%if app.request.get('montant_comparateur') == "<"%}selected{%endif%} value='<'><</option>
+            </select>
+        </div>
+            <div class='col-lg-3'>
+                <select name='reglement_search[type]' class='form-control'>
+                    <option></option>
+                    {%for type in types%}
+                        <option value='{{type}}'{%if app.request.get('type') == type%}selected{%endif%}>{{type}}</option>
+                    {%endfor%}
+                </select>
+            </div>
+        
+    </div>  
+    
+    <br />
+    <div class='row'>
+        <div class='col-lg-2'>
+            <input type='submit' value='Rechercher' class='btn btn-primary'> 
+            <a href='{{path('reglement_index')}}' class='btn btn-danger'>Reset</a>
+        </div>
+    </div>
+    <br />
+    </form>    
+    <table class="table table-bordered index_table">
+        <thead>
+            <tr>
+                <th>Tier / Fournisseur</th>
+                <th>Dépense / Achat</th>
+                <th>Banque/Caisse</th>
+                <th>Libellé</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th class="text-right">Montant</th>
+                <th id="index_th_action">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reglement in reglements %}
+                <tr>
+                    <td>{%if reglement.tier%}<a href="{{path('tier_show',{'id':reglement.tier.id})}}">{{reglement.tier.name}}</a>{%endif%}</td>
+                    <td>{%if reglement.depense%}<a href="{{path('depense_show',{'id':reglement.depense.id})}}">{{reglement.depense.name}}</a>{%endif%}</td>
+                    <td>{%if reglement.banqueOperation%}obc-{{reglement.banqueOperation.id}}{%endif%}</td>
+                    <td>{{reglement.name}}</td>
+                    <td>{{reglement.type}}</td>
+                    <td>{%if reglement.date%}{{reglement.date|date('d/m/Y')}}{%endif%}</td>
+                    <td class='text-right' nowrap>{%if reglement.montant%}{{reglement.montant|number_format(3, '.', ' ')}}{%endif%}</td>
+                    <td>
+                        <ul id="index_action_buttons">
+                            <li>
+                                <a href="{{ path('reglement_show', { 'id': reglement.id }) }}"  class="btn btn-primary btn-xs">Détails <span class="glyphicon glyphicon-search"></span></a>
+                            </li>
+                            <li>
+                                <a href="{{ path('reglement_edit', { 'id': reglement.id }) }}"  class="btn btn-warning btn-xs">Modifier  <span class="glyphicon glyphicon-edit"></a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan='6'></td>
+                <td class='text-right' nowrap><b>{{totaux['montant']|number_format(3, '.', ' ')}}</b></td>
+                <td></td>
+            </tr>
+                
+        </tbody>
+    </table>
+    <div class="navigation">
+        {{ knp_pagination_render(reglements) }}
+    </div>    
+{% endblock %}

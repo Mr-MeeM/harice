@@ -1,0 +1,132 @@
+{% block body %}
+     
+
+    <form action='{{path('banqueoperation_index')}}' id='Recherche-Operation-Bancaire' method="POST">
+    <div class='row'>
+        <input type='hidden' name='op_search[origin_vue]' value='{{app.request.get('origin_vue')}}'>
+        <input type='hidden' name='op_search[origin_vue_id]' value='{{app.request.get('origin_vue_id')}}'>
+        <input type='hidden' name='op_search[origin_type]' value='{{app.request.get('origin_type')}}'>
+        <input type='hidden' name='op_search[origin_type_id]' value='{{app.request.get('origin_type_id')}}'>
+            <div class='col-lg-2'>
+                <input name='op_search[name]' placeholder='Recherche...'  class='form-control' value='{{app.request.get('name')}}'>
+            </div>
+            <div class='col-lg-2'>
+                <select name='op_search[compte]' id='compte-search' class='form-control'>
+                    <option></option>
+                    {%for compte in comptes%}
+                        <option value='{{compte.id}}'>{{compte.name}}</option>
+                    {%endfor%}
+                </select>
+            </div>
+            <div class='col-lg-1'>
+                <input name='op_search[debit]'  placeholder='debit'  class='form-control' value='{{app.request.get('debit')}}'>      
+            </div>
+            <div class='col-lg-1' style='margin-left: -25px;'>
+                <select name='op_search[debit_comparateur]' class='form-control'>
+                    <option {%if app.request.get('debit_comparateur') == "="%}selected{%endif%} value='='>=</option>
+                    <option {%if app.request.get('debit_comparateur') == ">="%}selected{%endif%} value='>='>>=</option>
+                    <option {%if app.request.get('debit_comparateur') == "<="%}selected{%endif%} value='<='><=</option>
+                    <option {%if app.request.get('debit_comparateur') == ">"%}selected{%endif%} value='>'>></option>
+                    <option {%if app.request.get('debit_comparateur') == "<"%}selected{%endif%} value='<'><</option>
+                </select>
+            </div>
+            <div class='col-lg-1'>
+                <input name='op_search[credit]'  placeholder='credit'  class='form-control' value='{{app.request.get('credit')}}'>      
+            </div>
+            <div class='col-lg-1' style='margin-left: -25px;'>
+                <select name='op_search[credit_comparateur]' class='form-control'>
+                    <option {%if app.request.get('credit_comparateur') == "="%}selected{%endif%} value='='>=</option>
+                    <option {%if app.request.get('credit_comparateur') == ">="%}selected{%endif%} value='>='>>=</option>
+                    <option {%if app.request.get('credit_comparateur') == "<="%}selected{%endif%} value='<='><=</option>
+                    <option {%if app.request.get('credit_comparateur') == ">"%}selected{%endif%} value='>'>></option>
+                    <option {%if app.request.get('credit_comparateur') == "<"%}selected{%endif%} value='<'><</option>
+                </select>
+            </div>
+            <div class='col-lg-3'>
+                {%set date_debut = ""%}
+                {%set date_fin = ""%}
+                {%if app.request.get('date_debut')%}
+                    {%set date = app.request.get('date_debut')|split('-')%}
+                    {%if date[2] is defined %}{% set date_debut = date[2]~'/'%}{%endif%}
+                    {%if date[1] is defined %}{% set date_debut = date_debut~date[1]~'/'%}{%endif%}
+                    {%if date[0] is defined %}{% set date_debut = date_debut~date[0]%}{%endif%}
+                {%endif%}
+                {%if app.request.get('date_fin')%}
+                    {%set date = app.request.get('date_fin')|split('-')%}
+                    {%if date[2] is defined %}{% set date_fin = date[2]~'/'%}{%endif%}
+                    {%if date[1] is defined %}{% set date_fin = date_fin~date[1]~'/'%}{%endif%}
+                    {%if date[0] is defined %}{% set date_fin = date_fin~date[0]%}{%endif%}
+                {%endif%}
+                <div class='row'>
+                    <div class='col-lg-6'>
+                        <input name='op_search[date_debut]'  placeholder='Date de '  class='form-control datepicker' value='{{date_debut}}'>      
+                    </div>
+                    <div class='col-lg-6'>
+                        <input name='op_search[date_fin]'  placeholder='à'  class='form-control datepicker' value='{{date_fin }}'>      
+                    </div>
+                </div>
+            </div>
+        <div class='col-lg-1'>
+            <span class='btn btn-primary' id='recherche-operation-bancaire-ajax'>Rechercher</span> 
+        </div>
+    </div>
+    <br />
+    </form>    
+    <table class="table table-bordered table-hover index_table">
+        <thead>
+            <tr>
+                <th>Compte</th>
+                <th>Date</th>
+                <th>Libellé</th>
+                <th>Débit</th>
+                <th>Crédit</th>
+                <th>Solde débit</th>
+                <th>Solde crédit</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for op in banqueOperations %}
+                <tr>
+                    <td>{{op.banqueCompte.name}}</td>
+                    <td>{%if op.date%}{{op.date|date('d/m/Y')}}{%endif%}</td>
+                    <td>{{op.name}}</td>
+                    <td class='text-right'>{%if op.debit%}{{op.debit|number_format(3, '.', ' ')}}{%endif%}</td>
+                    <td class='text-right'>{%if op.credit%}{{op.credit|number_format(3, '.', ' ')}}{%endif%}</td>
+                    <td class='text-right'>
+                        {%if op.soldeReglementDebit is null%}
+                            -
+                        {%elseif op.soldeReglementDebit > 0%}
+                            <span style="color: red">{{op.soldeReglementDebit|number_format(3, '.', ' ')}}</span>
+                        {%elseif op.soldeReglementDebit == 0%}
+                            <span style="color: green">Soldé</span>
+                        {%elseif op.soldeReglementDebit < 0%}
+                            <span style="color: red">{{op.soldeReglementDebit|number_format(3, '.', ' ')}} <sub>(Sur-affectée)</sub></span>
+                        {%else%}
+                            -
+                        {%endif%}
+                    </td>
+                    <td class='text-right'>
+                        {%if op.soldeReglementCredit is null%}
+                            -
+                        {%elseif op.soldeReglementCredit > 0%}
+                            <span style="color: red">{{op.soldeReglementCredit|number_format(3, '.', ' ')}}</span>
+                        {%elseif op.soldeReglementCredit == 0%}
+                            <span style="color: green">Soldé</span>
+                        {%elseif op.soldeReglementCredit < 0%}
+                            <span style="color: red">{{op.soldeReglementCredit|number_format(3, '.', ' ')}} <sub>(Sur-affectée)</sub></span>
+                        {%else%}
+                            -
+                        {%endif%}
+                    </td>
+                    <td>
+                       <a href="{{ path('banqueoperation_affecter', { 'id': op.id }) }}?origin_vue={{app.request.get('origin_vue')}}&origin_vue_id={{app.request.get('origin_vue_id')}}&origin_type={{app.request.get('origin_type')}}&origin_type_id={{app.request.get('origin_type_id')}}"  class="btn btn-primary btn-xs">Affecter </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation navigation-ajax">
+        {{ knp_pagination_render(banqueOperations) }}
+    </div>    
+{% endblock %}

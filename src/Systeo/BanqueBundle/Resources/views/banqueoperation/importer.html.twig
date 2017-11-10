@@ -1,0 +1,71 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('bundles/systeofile/css/main.css') }}" type="text/css" />
+    <script  src="{{ asset('js/upload-files.js') }}" ></script>   
+    <fieldset>
+        <legend>Importer opération bancaires</legend>
+    </fieldset>
+    <div class="btn_add pull-right">
+        <ul id='show_action_buttons'>
+            <li><a href="{{ path('banqueoperation_index') }}"  class="btn btn-info">Liste des opérations bancaires <span class="glyphicon glyphicon-th-list"></span></a></li>
+        </ul>
+    </div>   
+    <div class="row">
+        <div class='col-lg-4'>
+
+            <div class="col-lg-11">
+                <span class="btn btn-info simple_file_select">Importer</span>
+                <span data-target-form="file-ajax-form" 
+                      data-target-field="modus_espacecommun_document"
+                      data-url="{{path('simple_file_ajax_add')}}" 
+                      data-redirection="{{path('banqueoperation_display_save_csv')}}"
+                      class="btn btn-primary simple_file_upload">OK</span>
+                <span class="icones_file_upload">
+                    <span id="" class="ajax_simple_file_icones_loading icones_upload_loading"></span>
+                    <span id="" class="ajax_simple_file_icones_loading icones_upload_success"></span>
+                    <span id="" class="ajax_simple_file_icones_loading icones_upload_error"></span>
+                </span>
+                <span class="display-block"></span>
+                <span class="selected_file"></span>
+                <span class="display-block"></span>
+                <span class="alert alert-danger simple_file_alert"></span>
+            </div>
+
+
+        </div>    
+    </div> 
+                      
+    <div class='row'>
+        <div class='col-lg-12'>
+            <div class='alert alert-info'>
+                <h3>Informations importation</h3>
+                <ol>
+                    <li>L'importation sur la base d'un fichier CSV</li>
+                    <li>";" en tant séparateur de colonnes</li>
+                    <li>Les colonnes doivent être comme suit :
+                        <ul>
+                            <li>Date</li>
+                            <li>Date valeur</li>
+                            <li>Libellé</li>
+                            <li>Débit</li>
+                            <li>Crédit</li>
+                            <li>Solde</li>
+                        </ul>
+                    </li>
+                    <li>Le format des dates doit être jj/mm/yyyy</li>
+                    <li>Pour les dates, le séparateur des décimaux doit être un point '.' et non une virgule ','</li>
+                    <li>Après l'importation, supprimer manuellement les opérations bancaires qui exsitent déjà dans la BDD</li>
+                    <li>Enregistrer</li>
+                </ol>
+                <br />
+                <p align='center'><a class='btn btn-primary' target='_blank' href='{{asset('fichiers/exemple-banque.csv')}}'>Exemple de fichier prêt à être importé</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="form-upload-file">
+        {{ form_start(file_form, {'attr': {'id': 'file-ajax-form'}}) }}
+        {{ form_row(file_form.filename, {'attr': {'class': 'simple-file-field'}}) }}
+        {{ form_end(file_form) }}
+    </div>
+{% endblock %}

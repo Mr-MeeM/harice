@@ -1,0 +1,51 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+
+    <fieldset>
+        <legend>{{ 'Liste des comptes bancaires'}}</legend>
+    </fieldset>
+    <div class="btn_add">
+        <a href="{{ path('banquecompte_new') }}"  class="btn btn-success pull-right">Ajouter un compte bancaire <span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+    <div class="clear-both"></div>
+
+
+    <table class="table table-bordered index_table">
+        <thead>
+            <tr>
+                <th>Désignation</th>
+                <th>Banque</th>
+                <th>Rib</th>
+                <th>Swift</th>
+                <th>Iban</th>
+                <th id="index_th_action">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for compte in banqueComptes %}
+                <tr>
+                    <td>{{compte.name}}</td>
+                    <td>{{compte.banque}}</td>
+                    <td>{{compte.rib}}</td>
+                    <td>{{compte.swift}}</td>
+                    <td>{{compte.iban}}</td>
+                    <td>
+                        <ul id="index_action_buttons">
+                            <li>
+                                <a href="{{ path('banquecompte_show', { 'id': compte.id }) }}"  class="btn btn-primary btn-xs">Détails <span class="glyphicon glyphicon-search"></span></a>
+                            </li>
+                            {%if compte.id != 1%}
+                            <li>
+                                <a href="{{ path('banquecompte_edit', { 'id': compte.id }) }}"  class="btn btn-warning btn-xs">Modifier  <span class="glyphicon glyphicon-edit"></a>
+                            </li>
+                            {%endif%}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation">
+        {{ knp_pagination_render(banqueComptes) }}
+    </div>         
+{% endblock %}

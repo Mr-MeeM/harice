@@ -1,0 +1,93 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+    <script  src="{{ asset('bundles/systeofile/js/main.js') }}" ></script>
+    <script language="javascript">
+        var AjaxFileConf = {
+                container:'#ajax_file_container',
+                entity:'User',
+                entity_id:'{{ user.id }}',
+                uploadPath:'{{ path('addajaxfile') }}',
+                diplayDocs:1,
+                displayGallery:1,
+                docsGaleryLoadingPath:'{{path('ajaxloadfiles')}}'
+            };
+        
+        load_view_ajax_file();
+    </script>
+    <fieldset>
+        <legend>{{ 'Détails utilisateur'}}</legend>
+    </fieldset>
+    <div class="row">
+        <div class='col-lg-12'>
+            <div class="btn_add pull-right">
+                <ul id='show_action_buttons'>
+                    <li><a href="{{ path('user_index') }}"  class="btn btn-info">Liste <span class="glyphicon glyphicon-th-list"></span></a></li>
+                    <li><a href="{{ path('user_edit', { 'id': user.id }) }}"  class="btn btn-warning">Modifier  <span class="glyphicon glyphicon-edit"></a></li>
+                    <li>
+                        {{ form_start(delete_form) }}
+
+                        <button class='btn btn-danger delete_form_button' data-msg="Voulez vous vraiement supprimer cet utilisateur?" type="button">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
+                        {{ form_end(delete_form) }}
+                    </li>
+                </ul>
+            </div>   
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Prénom</th>
+                        <td>{{ user.firstName }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <td>{{ user.lastName }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Identifiant</th>
+                        <td>{{ user.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>Actif</th>
+                        <td>
+                            {% if user.active %}
+                                <span class="label label-success">Oui</span>
+                            {% else %}
+                                <span class="label label-danger">Non</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Clé</th>
+                        <td>{{ user.apikey }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rôles</th>
+                        <td>{% if user.roles %}{{ user.roles|join(', ') }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th>Teams</th>
+                        <td>
+                            <ul>
+                                {% for team in user.teams%}
+                                    <li>{{team.name}}</li>
+                                {% endfor%}
+                            </ul>
+                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class='col-lg-6'>
+            <div id="ajax_file_container"></div>
+        </div>
+    </div>
+    
+{% endblock %}

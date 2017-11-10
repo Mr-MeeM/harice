@@ -1,0 +1,144 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <script  src="{{ asset('bundles/systeofile/js/main.js') }}" ></script>
+    <script language="javascript">
+        var AjaxFileConf = {
+                container:'#ajax_file_container',
+                entity:'BanqueOperation',
+                entity_id:'{{ banqueOperation.id }}',
+                uploadPath:'{{ path('addajaxfile') }}?public=false',
+                diplayDocs:1,
+                displayGallery:0,
+                docsGaleryLoadingPath:'{{path('ajaxloadhiddenfiles')}}'
+            };
+        
+        load_view_ajax_file();
+    </script>
+    <fieldset>
+            <legend>Détail opération bancaire</legend>
+    </fieldset>
+    <div class="btn_add pull-right">
+        <ul id='show_action_buttons'>
+            <li><a href="{{ path('banqueoperation_index') }}"  class="btn btn-info">Liste des opérations bancaires <span class="glyphicon glyphicon-th-list"></span></a></li>
+            <li><a href="{{ path('banqueoperation_edit', { 'id': banqueOperation.id }) }}"  class="btn btn-warning">Modifier  <span class="glyphicon glyphicon-edit"></a></li>
+            <li>
+                {{ form_start(delete_form) }}
+                
+                <button class='btn btn-danger delete_form_button' data-msg="Voulez vous vraiement supprimer cette opération bancaire?" type="button">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>   
+    <div class="row">
+        <div class="col-lg-6">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Compte</th>
+                        <td>{{banqueOperation.banqueCompte.name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Libellé</th>
+                        <td>{{banqueOperation.name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Débit</th>
+                        <td>{%if banqueOperation.debit > 0 %}{{banqueOperation.debit|number_format(3, '.', ' ')}}{%else%}-{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <th>Crédit</th>
+                        <td>{%if banqueOperation.credit > 0 %}{{banqueOperation.credit|number_format(3, '.', ' ')}}{%else%}-{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <th>Solde</th>
+                        <td>{%if banqueOperation.solde%}{{banqueOperation.solde|number_format(3, '.', ' ')}}{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <th>Solde Régelement</th>
+                        <td>
+                            {%if banqueOperation.debit > 0%}
+                                {%set soldeReg = banqueOperation.soldeReglementDebit %}
+                            {%elseif banqueOperation.credit > 0%}
+                                {%set soldeReg = banqueOperation.soldeReglementCredit %}
+                            {%endif%}
+                            
+                            {%if soldeReg is null%}
+                                -
+                            {%elseif soldeReg > 0%}
+                                <span style="color: red">{{soldeReg|number_format(3, '.', ' ')}}</span>
+                            {%elseif soldeReg == 0%}
+                                <span style="color: green">Soldé</span>
+                            {%elseif soldeReg < 0%}
+                                <span style="color: red">Sur-affectée</span>
+                            {%else%}
+                                -
+                            {%endif%}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <td>{%if banqueOperation.date%}{{banqueOperation.date|date('d/m/Y')}}{%endif%}</td>
+                    </tr>
+                    {%if banqueOperation.banqueCompte.id != 1%}
+                    <tr>
+                        <th>Date Valeur</th>
+                        <td>{%if banqueOperation.dateValeur%}{{banqueOperation.dateValeur|date('d/m/Y')}}{%endif%}</td>
+                    </tr>
+                    {%endif%}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6" id="ajax_file_container">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-9">
+            <h3>Réglements affectés</h3>
+            <table class="table table-bordered index_table">
+                <thead>
+                    <tr>
+                        <th>Tier / Fournisseur</th>
+                        <th>Vente / Achat</th>
+                        <th>Libellé</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th class="text-right">Montant</th>
+                        <th id="index_th_action">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reglement in banqueOperation.reglements %}
+                        <tr>
+                            <td>{%if reglement.tier%}<a href="{{path('tier_show',{'id':reglement.tier.id})}}">{{reglement.tier.name}}</a>{%endif%}</td>
+                            <td>
+                                {%if reglement.depense%}
+                                    <a href="{{path('depense_show',{'id':reglement.depense.id})}}">(DEPENSE) {{reglement.depense.name}}</a>
+                                {%elseif reglement.piece%}
+                                <a href="{{path('piece_show',{'id':reglement.piece.id})}}">(VENTE) - {{reglement.piece.numero}}</a>
+                                {%endif%}
+                            </td>
+                            
+                            <td>{{reglement.name}}</td>
+                            <td>{{reglement.type}}</td>
+                            <td>{%if reglement.date%}{{reglement.date|date('d/m/Y')}}{%endif%}</td>
+                            <td class='text-right' nowrap>{%if reglement.montant%}{{reglement.montant|number_format(3, '.', ' ')}}{%endif%}</td>
+                            <td>
+                                <ul id="index_action_buttons">
+                                    <li>
+                                        <a href="{{ path('reglement_show', { 'id': reglement.id }) }}"  class="btn btn-primary btn-xs">Détails <span class="glyphicon glyphicon-search"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('reglement_edit', { 'id': reglement.id }) }}"  class="btn btn-warning btn-xs">Modifier  <span class="glyphicon glyphicon-edit"></a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

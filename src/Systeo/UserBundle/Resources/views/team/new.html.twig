@@ -1,0 +1,30 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <fieldset>
+            <legend>{{ 'Nouvelle Team'}}</legend>
+    </fieldset>
+    <div class="row">
+        <div class="col-lg-12">      
+            <div class="btn_list pull-right">
+                <a href="{{ path('team_index') }}"  class="btn btn-info">Liste <span class="glyphicon glyphicon-th-list"></span></a>
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-lg-4">
+            {{ form_row(form.name) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            {{ form_row(form.description) }}
+        </div>
+    </div>
+     <input type="submit" value="Enregistrer" class="btn btn-success"/>
+    {{ form_end(form) }}
+
+{% endblock %}

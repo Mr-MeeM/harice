@@ -1,0 +1,90 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <script  src="{{ asset('bundles/systeotier/js/main.js') }}" ></script>
+    <fieldset>
+            <legend>{{ 'Nouveau tier'}}</legend>
+    </fieldset>
+    <div class="row">
+        <div class="col-lg-12">      
+            <div class="btn_list pull-right">
+                <a href="{{ path('tier_index') }}"  class="btn btn-info">Liste des tiers <span class="glyphicon glyphicon-th-list"></span></a>
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-lg-2">
+            {{ form_row(form.type) }}
+        </div>
+        <div class="col-lg-10 tier-personne-morale">
+            {{ form_row(form.rs) }}
+        </div>
+        <div class="col-lg-5 tier-personne-physique">
+            {{ form_row(form.firstName) }}
+        </div>
+        <div class="col-lg-5 tier-personne-physique">
+            {{ form_row(form.lastName) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2">
+            {{ form_row(form.client) }}
+        </div>
+        <div class="col-lg-2">
+            {{ form_row(form.fournisseur) }}
+        </div>
+        <div class="col-lg-2">
+            {{ form_row(form.employe) }}
+        </div>
+        <div class="col-lg-3">
+            {{ form_row(form.mf) }}
+        </div>
+        <div class="col-lg-3">
+            {{ form_row(form.rc) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(form.rueNumero1) }}
+        </div>
+        <div class="col-lg-2">
+            {{ form_row(form.cp1) }}
+        </div>
+        <div class="col-lg-2">
+            {{ form_row(form.ville1) }}
+        </div>
+        <div class="col-lg-2">
+            {{ form_row(form.pays1) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            {{ form_row(form.tel1) }}
+        </div>
+        <div class="col-lg-4">
+            {{ form_row(form.email1) }}
+        </div>
+        <div class="col-lg-4">
+            {{ form_row(form.fax1) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            {{ form_row(form.tel2) }}
+        </div>
+        <div class="col-lg-4">
+            {{ form_row(form.email2) }}
+        </div>
+    </div>
+     <input type="submit" value="Enregistrer" class="btn btn-success"/>
+    {{ form_end(form) }}
+    
+    <script>
+        tierTypeChanges('{{form.type.vars.value}}');
+        tierClientChanges();
+        tierFournisseurChanges();
+    </script>
+{% endblock %}

@@ -1,0 +1,132 @@
+#ajax_add_file{
+    display: none;
+}
+
+#start_upload{
+    display: none;
+}
+
+#file_upload_buttons{
+    float: left;
+}
+#file_name_value{
+    display: block;
+    font-weight: bold;
+}
+
+#file_upload_images{
+    position: relative;
+    float: left;
+    margin-left: 5px;
+}
+
+span.ajax_file_icones_loading{
+    display: inline-block;
+    padding: 16px;
+    background: red;
+    background-size: 32px 32px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: none;
+}
+
+#upload_file_error_message{
+    margin-top: 5px;
+    display: none;
+}
+
+#ajax_file_upload_loading{
+    background: url(../img/loading.svg) left no-repeat;
+}
+#ajax_file_upload_success{
+    background: url(../img/success.svg) left no-repeat;
+}
+#ajax_file_upload_error{
+    background: url(../img/error.svg) left no-repeat;
+}
+
+#list_photo_gallery{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+#list_photo_gallery li{
+    float: left;
+    width: 200px;
+    height: 200px;
+    margin-left: 10px;
+    overflow: hidden;
+}
+
+#list_photo_gallery img{
+    width: 100%;
+    height: auto;
+}
+
+.image_galler_display{
+    position: relative;
+}
+.edit_image_galler_display{
+    position: absolute;
+    width:20px;
+    height: 20px;
+    top:5px;
+    right: 30px;
+    cursor: pointer;
+}
+.edit_image_galler_display img{
+    width: 100%;
+    height: auto;
+}
+.delete_image_galler_display{
+    position: absolute;
+    width:20px;
+    height: 20px;
+    top:5px;
+    right: 5px;
+    cursor: pointer;
+}
+#list_file_links{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#list_file_links li{
+    line-height: 25px;
+}
+.icon-file{
+    margin-right: 5px;
+}
+.edit_file_icone{
+    height: 20px;
+    width: 20px;
+    margin-left: 20px;
+    display: inline-block;
+    cursor: pointer;
+    visibility: hidden;
+}
+.edit_file_icone img{
+    width: 100%;
+    height: auto;
+}
+.delete_file_icone{
+    height: 20px;
+    width: 20px;
+    margin-left: 0px;
+    display: inline-block;
+    cursor: pointer;
+    visibility: hidden;
+}
+.index-files{
+    width: 50px;
+}
+.show-files{
+    width: 100%;
+}
+.index-files img, .show-files img{
+    width: 100%;
+    height: auto;
+}

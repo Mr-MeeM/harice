@@ -1,0 +1,170 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+    <script  src="{{asset('bundles/systeovente/js/main-export.js') }}" ></script>
+    <fieldset>
+        <legend>Liste des {{app.request.get('type')}} export</legend>
+    </fieldset>
+    <div class="btn_add">
+        <a href="{{ path('piece_export_new') }}?type={{app.request.get('type')}}"  class="btn btn-success pull-right">Ajouter une facture export <span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+    <div class="clear-both"></div>
+    
+    <form name='Recherche' method="POST" novalidate id="form-recherche-piece-reglement" url="{{path('piece_export_solde_ajax')}}">
+    <br />
+    <div class='row'>
+            
+            <div class='col-lg-2'>
+                <input name='piece_export_search[type]' type="hidden" value='{{app.request.get('type')}}'>
+                <input name='piece_export_search[tier]' placeholder='Tier'  class='form-control' value='{{app.request.get('tier')}}'>
+            </div>
+            <div class='col-lg-3'>
+                {%set date_debut = ""%}
+                {%set date_fin = ""%}
+                {%if app.request.get('date_debut')%}
+                    {%set date = app.request.get('date_debut')|split('-')%}
+                    {%if date[2] is defined %}{% set date_debut = date[2]~'/'%}{%endif%}
+                    {%if date[1] is defined %}{% set date_debut = date_debut~date[1]~'/'%}{%endif%}
+                    {%if date[0] is defined %}{% set date_debut = date_debut~date[0]%}{%endif%}
+                {%endif%}
+                {%if app.request.get('date_fin')%}
+                    {%set date = app.request.get('date_fin')|split('-')%}
+                    {%if date[2] is defined %}{% set date_fin = date[2]~'/'%}{%endif%}
+                    {%if date[1] is defined %}{% set date_fin = date_fin~date[1]~'/'%}{%endif%}
+                    {%if date[0] is defined %}{% set date_fin = date_fin~date[0]%}{%endif%}
+                {%endif%}
+                <div class='col-lg-6'>
+                    <input name='piece_export_search[date_debut]'  placeholder='Date de '  class='form-control datepicker' value='{{date_debut}}'>      
+                </div>
+                <div class='col-lg-6'>
+                    <input name='piece_export_search[date_fin]'  placeholder='à'  class='form-control datepicker' value='{{date_fin }}'>      
+                </div>
+            </div>
+            
+            
+   
+        <div class='col-lg-2'>
+            <input name='piece_export_search[montantHt]'  placeholder='montant HT'  class='form-control' value='{{app.request.get('montantHt')}}'>      
+        </div>
+        <div class='col-lg-1' style='margin-left: -25px;'>
+            <select name='piece_export_search[montantHt_comparateur]' class='form-control'>
+                <option {%if app.request.get('montantHt_comparateur') == "="%}selected{%endif%} value='='>=</option>
+                <option {%if app.request.get('montantHt_comparateur') == ">="%}selected{%endif%} value='>='>>=</option>
+                <option {%if app.request.get('montantHt_comparateur') == "<="%}selected{%endif%} value='<='><=</option>
+                <option {%if app.request.get('montantHt_comparateur') == ">"%}selected{%endif%} value='>'>></option>
+                <option {%if app.request.get('montantHt_comparateur') == "<"%}selected{%endif%} value='<'><</option>
+            </select>
+        </div>
+        
+        <div class='col-lg-2'>
+            <input name='piece_export_search[montantTtc]'  placeholder='montant TTC'  class='form-control' value='{{app.request.get('montantTtc')}}'>      
+        </div>
+        <div class='col-lg-1' style='margin-left: -25px;'>
+            <select name='piece_export_search[montantTtc_comparateur]' class='form-control'>
+                <option {%if app.request.get('montantTtc_comparateur') == "="%}selected{%endif%} value='='>=</option>
+                <option {%if app.request.get('montantTtc_comparateur') == ">="%}selected{%endif%} value='>='>>=</option>
+                <option {%if app.request.get('montantTtc_comparateur') == "<="%}selected{%endif%} value='<='><=</option>
+                <option {%if app.request.get('montantTtc_comparateur') == ">"%}selected{%endif%} value='>'>></option>
+                <option {%if app.request.get('montantTtc_comparateur') == "<"%}selected{%endif%} value='<'><</option>
+            </select>
+        </div>
+    </div>  
+    
+    <br />
+    <div class='row'>
+        <div class='col-lg-2'>
+            <input type='submit' value='Rechercher' class='btn btn-primary'> 
+            <a href='{{path('piece_index')}}?type={{app.request.get('type')}}' class='btn btn-danger'>Reset</a>
+        </div>
+    </div>
+    <br />
+    </form>  
+
+    <table class="table table-bordered index_table">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Tier</th>
+                <th>{{app.request.get('type')}}</th>
+                <th>Date</th>
+                <th class="text-right">Montant HT</th>
+                <th class="text-right">Montant TTC</th>
+                <th class="text-right">Solde</th>
+                <th id="index_th_action">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for piece in pieces %}
+                <tr>
+                    <td>{{piece.numero}}</td>
+                    <td>{%if piece.tier%}<a href="{{path('tier_show',{'id':piece.tier.id})}}">{{piece.tier.name}}</a>{%endif%}</td>
+                    <td>{%if piece.piece%}
+                        <a href="{{path('piece_show',{'id':piece.piece.id})}}">
+                            {%set prefix=''%}
+                            {%if piece.numero != ""%}
+                                {%for i in 0..(3-piece.numero|length)%}
+                                    {%set prefix=prefix~'0'%}
+                                {%endfor%}
+                            {%endif%}
+                            {{prefix}}{{piece.piece.numero}} / {%if piece.piece.date%}{{piece.date|date('Y')}}{%endif%}
+                        </a>
+                        <a href="{{path('piece_export_affecter_local')}}?type=desaffecter&vue=liste&piece_export_id={{piece.id}}" class="btn btn-danger btn-xs"> Desaffecter </a>
+                        {%else%}
+                            <span class="btn btn-info btn-xs btn-affecter-export" data-url="{{path('piece_affectation_export')}}?vue=liste&type={{piece.type}}&tier={{piece.tier.id}}&piece_export_id={{piece.id}}">Affecter</span>   
+                        {%endif%}
+                    </td>
+                    <td>{%if piece.date%}{{piece.date|date('d/m/Y')}}{%endif%}</td>
+                    <td class='text-right' nowrap>{%if piece.montantHt%}{{piece.montantHt|number_format(2, '.', ' ')}} {{piece.devise}}{%endif%}</td>
+                    
+                    <td class='text-right' nowrap>{%if piece.montantTtc%}{{piece.montantTtc|number_format(2, '.', ' ')}} {{piece.devise}}{%endif%}</td>
+                    <td class="text-right" nowrap>
+                        {%if (piece.solde is not null) and (piece.solde >0) %}
+                            <b><span style='color: red;'>
+                                {{piece.solde|number_format(2, '.', ' ')}} {{piece.devise}}
+                        {%else%}        
+                            <b><span style='color: green;'>
+                                0.00
+                        {%endif%}
+                        </span></b>    
+                    </td>
+                    <td>
+                        <ul id="index_action_buttons">
+                            <li>
+                                <a href="{{ path('piece_export_show', { 'id': piece.id }) }}"  class="btn btn-primary btn-xs">Détails <span class="glyphicon glyphicon-search"></span></a>
+                            </li>
+                            <li>
+                                <a href="{{ path('piece_export_edit', { 'id': piece.id }) }}"  class="btn btn-warning btn-xs">Modifier  <span class="glyphicon glyphicon-edit"></a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <td colspan='4'></td>
+                    <td class='text-right' nowrap><b>{{totaux['HT']|number_format(2, '.', ' ')}}</b></td>
+                    <td class='text-right' nowrap><b>{{totaux['TTC']|number_format(2, '.', ' ')}}</b></td>
+                    <td class='text-right' nowrap><b>{{totaux['TTC']|number_format(2, '.', ' ')}}</b></td>
+                    <!--<td class='text-right' nowrap id="SoldeTotal"><img id="loading-solde" src="{{asset('img/loading.svg')}}" /></td>-->
+                    <td></td>
+                </tr>
+        </tbody>
+    </table>
+    <div class="navigation">
+        {{ knp_pagination_render(pieces) }}
+    </div>         
+        <script>
+             getSolde('form-recherche-piece-reglement');
+        </script>
+        
+    <div class="modal fade" id="myModalAffectationExportEditor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalAffectationExportLabel">Affectation</h4>
+                </div>
+                <div class="modal-body" id="myModalAffectationExportBody">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

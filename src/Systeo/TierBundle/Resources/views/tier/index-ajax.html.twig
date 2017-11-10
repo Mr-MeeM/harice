@@ -1,0 +1,72 @@
+{% block body %}
+    <form action='{{path('tier_index')}}' id='Recherche-tier' method="POST">
+    <div class='row'>
+            <div class='col-lg-3'>
+                <input name='tier_search[name]' placeholder='Recherche...'  class='form-control' value='{{app.request.get('name')}}'>
+            </div>
+            
+            
+        <div class='col-lg-1'>
+            <span class='btn btn-primary' id='recherche-tier-ajax'>Rechercher</span> 
+        </div>
+    </div>
+    <br />
+    </form>  
+
+
+    <table class="table table-bordered index_table">
+        <thead>
+            <tr>
+                <th>Raison Sociale / Prénom & Nom</th>
+                <th>Client</th>
+                <th>Fournisseur</th>
+                <th>Employé</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tier in tiers %}
+                <tr>
+                    <td>{{ tier.name }}</td>
+                    <td>
+                        {% if tier.client %}
+                            <span class="label label-success">Oui</span>
+                        {% else %}
+                            <span class="label label-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if tier.fournisseur %}
+                            <span class="label label-success">Oui</span>
+                        {% else %}
+                            <span class="label label-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if tier.employe %}
+                            <span class="label label-success">Oui</span>
+                        {% else %}
+                            <span class="label label-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <ul id="index_action_buttons">
+                            <li>
+                                <span 
+                                    class="btn btn-info btn-xs tier-affecter"
+                                    data-id="{{tier.id}}"
+                                    data-name="{{tier.name}}"
+                                    data-mf="{{tier.mf}}"
+                                    data-adresse="{{tier.rueNumero1}} {{tier.cp1}} {{tier.ville1}} {{tier.pays1}}"
+                                >Affecter</span>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation navigation-ajax">
+        {{ knp_pagination_render(tiers) }}
+    </div>   
+{% endblock %}

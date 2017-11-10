@@ -1,0 +1,87 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    {%set direction = 'in'%}
+    {%set class_in = ''%}
+    {%set class_out = 'display:none'%}
+    {%if app.request.get('direction') == 'out' %}
+        {%set direction = 'out'%}
+        {%set class_out = ''%}
+        {%set class_in = 'display:none'%}
+    {%endif%}
+    
+    
+    <script  src="{{asset('bundles/systeoreglement/js/main.js') }}" ></script>   
+    <script  src="{{asset('bundles/systeotier/js/main.js') }}" ></script> 
+    <fieldset>
+        <legend>Nouveau réglement</legend>
+    </fieldset>
+    <div class="row">
+        <div class="col-lg-12">      
+            <div class="btn_list pull-right">
+                <a href="{{ path('reglement_index') }}?direction={{direction}}"  class="btn btn-info">Liste des réglements <span class="glyphicon glyphicon-th-list"></span></a>
+            </div>
+        </div>
+    </div>
+    <br />
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate','id':'systeo_reglementbundle_reglement_form'}}) }}
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(form.name) }}
+            {{ form_row(form.direction,{"attr":{"value":direction}}) }}
+        </div>
+        <div class="col-lg-2">
+            {{ form_row(form.date) }}
+        </div>
+        <div class="col-lg-2">
+            {{ form_row(form.montant) }}
+        </div>
+        <div class="col-lg-2">
+            {{ form_row(form.type) }}
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-4">
+            <label class="control-label required" for="tierName">Tier</label>
+            <div class="input-group">
+                <input nam="tier_name" id="tierName" class="form-control" value="{%if reglement.tier%}{{reglement.tier.name}}{%endif%}">
+                <div class="input-group-addon" id='ajouter-tier' data-url="{{path('tier_index')}}"><i class='glyphicon glyphicon-th-list'></i></div>  
+            </div>
+            {{ form_widget(form.tier) }}
+            {{ form_errors(form.tier) }}
+        </div>
+        <div class="col-lg-8" style="{{class_in}}">
+            {{ form_row(form.piece) }}
+        </div>
+        <div class="col-lg-8" style="{{class_out}}">
+            {{ form_row(form.depense) }}
+        </div>
+    </div>
+    <input type="submit" value="Enregistrer" class="btn btn-success"/>
+    {{ form_end(form) }}
+    <div class="modal fade" id="myModalListeTier" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="my-modal-large" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalListeTierLabel">Liste des Tiers</h4>
+                </div>
+                <div class="modal-body" id="myModalListeTierBody">
+
+                </div>
+                <span 
+                    id="affectationTier" 
+                    data-id="systeo_reglementbundle_reglement_tier"
+                    data-name="tierName"
+                    ></span>
+            </div>
+        </div>
+    </div>
+    <style>
+        .help-block{
+            color:#a94442 !important;
+        }
+    </style>
+{% endblock %}

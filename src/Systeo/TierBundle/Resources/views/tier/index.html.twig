@@ -1,0 +1,84 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+
+{% block body %}
+
+    <fieldset>
+        <legend>{{ 'Liste des tiers'}}</legend>
+    </fieldset>
+    <div class="btn_add">
+        <a href="{{ path('tier_new') }}"  class="btn btn-success pull-right">Ajouter un tier <span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+    <div class="clear-both"></div>
+
+    <div class="row search_form">
+        {{ form_start(form) }}
+        <div class="col-lg-3">
+            {{ form_row(form.name,{'value': app.request.get('name')}) }}
+        </div>
+        <div class="col-lg-1">
+            <input type="submit" value="Rechercher" class="btn btn-info"/>
+        </div>
+        <div class="col-lg-1">
+            <a href="{{ path('tier_index') }}"  class="btn btn-danger">Réinitialiser</a>
+        </div>
+        {{ form_end(form) }}
+    </div>
+
+
+    <table class="table table-bordered index_table">
+        <thead>
+            <tr>
+                <th>Raison Sociale / Prénom & Nom</th>
+                <th>Type</th>
+                <th>Client</th>
+                <th>Fournisseur</th>
+                <th>Employé</th>
+                <th id="index_th_action">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tier in tiers %}
+                <tr>
+                    <td><a href="{{ path('tier_show', { 'id': tier.id }) }}">{{ tier.name }}</a></td>
+                    <td>{{types[tier.type]}}</td>
+                    <td>
+                        {% if tier.client %}
+                            <span class="label label-success">Oui</span>
+                        {% else %}
+                            <span class="label label-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if tier.fournisseur %}
+                            <span class="label label-success">Oui</span>
+                        {% else %}
+                            <span class="label label-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if tier.employe %}
+                            <span class="label label-success">Oui</span>
+                        {% else %}
+                            <span class="label label-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <ul id="index_action_buttons">
+                            <li>
+                                <a href="{{ path('tier_show', { 'id': tier.id }) }}"  class="btn btn-primary btn-xs">Détails <span class="glyphicon glyphicon-search"></span></a>
+                            </li>
+                            <li>
+                                <a href="{{ path('tier_edit', { 'id': tier.id }) }}"  class="btn btn-warning btn-xs">Modifier  <span class="glyphicon glyphicon-edit"></a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation">
+        {{ knp_pagination_render(tiers) }}
+    </div>         
+{% endblock %}

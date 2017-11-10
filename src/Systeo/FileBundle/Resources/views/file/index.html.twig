@@ -1,0 +1,66 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('bundles/systeofile/css/main.css') }}" type="text/css" />
+    <div class="row">
+        <div class="col-lg-12">
+            <fieldset>
+                <legend>{{ 'Liste des fichiers'}}</legend>
+            </fieldset>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-bordered index_table">
+                <thead>
+                    <tr>
+                        <th>Fichier</th>
+                        <th>Nom</th>
+                        <th>Catégories</th>
+                        <td>Entité</td>
+                        <th id="index_th_action">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                        
+                        <tr>
+                            <td>
+                                {%if file.image == 1 %}
+                                    <div class='index-files'>
+                                        <img src="{{ asset('files/') }}{{file.path}}/{{file.fileName}}" alt="{{file.name}}" />
+                                    </div>
+                                {%else%}
+                                    <span class="icon-file"><img src="{{ asset('bundles/systeofile/img/fileicons/'~file.extension~'.png') }}" /></span>
+                                    <a href="{{ asset('files/') }}{{file.path}}/{{file.fileName}}" target="_blank">{{file.name}}</a>
+                                {%endif%}
+                            </td>
+                            <td>{{file.name}}</td>
+                            <td>
+                                {% for categ in file.fileCategories%}
+                                    {{categ.name}}, 
+                                {% endfor%}
+                            </td>
+                            <td>{{file.entity}}/{{file.entityId}}<td>
+                                <ul id="index_action_buttons">
+                                    <li>
+                                        <a href="{{ path('file_show', { 'id': file.id }) }}"  class="btn btn-primary btn-xs">Détails <span class="glyphicon glyphicon-search"></span></a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="navigation">
+                {{ knp_pagination_render(files) }}
+            </div> 
+        </div>
+    </div>
+{% endblock %}

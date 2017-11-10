@@ -1,0 +1,33 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% block body %}
+   <style>
+     .datepicker{z-index:1151 !important;}
+    </style>
+   {%if montant != ""%}
+       {%set montant = montant|number_format(3, '.', '')%}
+   {%endif%}
+    {{ form_start(form, {'attr': {'id':'reglement-ajax-form','action':path('reglement_new_ajax')~'?type='~type~'&entite='~entite,'novalidate': 'novalidate'}}) }}
+        <div class="row">
+            <div class="col-lg-12">
+                {{form_row(form.name)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                {{form_row(form.type)}}
+            </div>
+            <div class="col-lg-4">
+                {{form_row(form.date)}}
+            </div>
+            <div class="col-lg-4">
+                {{form_row(form.montant,{'attr':{'value':montant}})}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <input type="button" value="Enregistrer" id="reglement-ajax-button" class="btn btn-success"/>
+            </div>
+        </div>
+    {{ form_end(form) }}
+    
+{% endblock %}

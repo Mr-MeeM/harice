@@ -1,0 +1,266 @@
+<?php
+
+namespace Systeo\ConfigBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Config
+ *
+ * @ORM\Table(name="config")
+ * @ORM\Entity(repositoryClass="Systeo\ConfigBundle\Repository\ConfigRepository")
+ */
+class Config
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="logo", type="string", length=50, nullable=true)
+     */
+    private $logo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="company_name", type="string", length=255, nullable=true)
+     */
+    private $companyName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="taux_tva", type="string", length=255, nullable=true)
+     */
+    private $tauxTva;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="droit_timbre",  type="decimal", precision=10, scale=3, nullable=true)
+     */
+    private $droitTimbre;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tel", type="string", length=20, nullable=true)
+     */
+    private $tel;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fax", type="string", length=20, nullable=true)
+     */
+    private $fax;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=100, nullable=true)
+     */
+    private $email;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="web", type="string", length=100, nullable=true)
+     */
+    private $web;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mf", type="string", length=20, nullable=true)
+     */
+    private $mf;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="rc", type="string", length=20, nullable=true)
+     */
+    private $rc;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cd", type="string", length=20, nullable=true)
+     */
+    private $cd;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adresse", type="string", length=255, nullable=true)
+     */
+    private $adresse;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="banque", type="string", length=50, nullable=true)
+     */
+    private $banque;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="rib", type="string", length=30, nullable=true)
+     */
+    private $rib;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="swift", type="string", length=30, nullable=true)
+     */
+    private $swift;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="iban", type="string", length=255, nullable=true)
+     */
+    private $iban;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="couleur1", type="string", length=10, nullable=true)
+     */
+    private $couleur1;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param string $logo
+     *
+     * @return Config
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return string
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * Set companyName
+     *
+     * @param string $companyName
+     *
+     * @return Config
+     */
+    public function setCompanyName($companyName)
+    {
+        $this->companyName = $companyName;
+
+        return $this;
+    }
+
+    /**
+     * Get companyName
+     *
+     * @return string
+     */
+    public function getCompanyName()
+    {
+        return $this->companyName;
+    }
+
+    /**
+     * Set tauxTva
+     *
+     * @param string $tauxTva
+     *
+     * @return Config
+     */
+    public function setTauxTva($tauxTva)
+    {
+        $this->tauxTva = $tauxTva;
+
+        return $this;
+    }
+
+    /**
+     * Get tauxTva
+     *
+     * @return string
+     */
+    public function getTauxTva()
+    {
+        return $this->tauxTva;
+    }
+    
+    public function getTvaValues(){
+        
+        $tab = explode(';',$this->getTauxTva());
+        
+        $result = [];
+        
+        if(!empty($tab)){
+            foreach($tab as $v):
+                $result[$v] = $v.'%';
+            endforeach;
+        }
+        
+        return $result;
+        
+        
+    }
+
+    /**
+     * Set droitTimbre
+     *
+     * @param string $droitTimbre
+     *
+     * @return Config
+     */
+    public function setDroitTimbre($droitTimbre)
+    {
+        $this->droitTimbre = $droitTimbre;
+
+        return $this;
+    }
+
+    /**
+     * Get droitTimbre
+     *
+     * @return string
+     */
+    public function getDroitTimbre()
+    {
+        return $this->droitTimbre;
+    }
+}

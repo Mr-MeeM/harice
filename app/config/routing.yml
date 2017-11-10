@@ -1,0 +1,72 @@
+systeo_vente_piece_export:
+    resource: "@SysteoVenteBundle/Controller/PieceExportController.php"
+    type:     annotation
+    
+systeo_vente_piece:
+    resource: "@SysteoVenteBundle/Controller/PieceController.php"
+    type:     annotation
+
+systeo_config_config:
+    resource: "@SysteoConfigBundle/Controller/ConfigController.php"
+    type:     annotation
+
+systeo_reglement_reglement:
+    resource: "@SysteoReglementBundle/Controller/ReglementController.php"
+    type:     annotation
+
+systeo_depense_depense:
+    resource: "@SysteoDepenseBundle/Controller/DepenseController.php"
+    type:     annotation
+
+systeo_depense_depense_category:
+    resource: "@SysteoDepenseBundle/Controller/DepenseCategoryController.php"
+    type:     annotation
+
+systeo_tier_tier:
+    resource: "@SysteoTierBundle/Controller/TierController.php"
+    type:     annotation
+
+systeo_banque_banque_compte:
+    resource: "@SysteoBanqueBundle/Controller/BanqueCompteController.php"
+    type:     annotation
+
+systeo_banque_banque_operation:
+    resource: "@SysteoBanqueBundle/Controller/BanqueOperationController.php"
+    type:     annotation
+
+systeo_file_file_category:
+    resource: "@SysteoFileBundle/Controller/FileCategoryController.php"
+    type:     annotation
+
+systeo_user_team:
+    resource: "@SysteoUserBundle/Controller/TeamController.php"
+    type:     annotation
+
+main_path:
+    path: /
+    defaults:
+        _controller: SysteoUserBundle:User:index
+    methods:  GET
+
+systeo_file_file:
+    resource: "@SysteoFileBundle/Controller/FileController.php"
+    type:     annotation
+
+
+systeo_user_user:
+    resource: "@SysteoUserBundle/Controller/UserController.php"
+    type:     annotation
+    
+login:
+    path: /login
+    defaults:
+        _controller: SysteoUserBundle:Security:login
+
+login_check:
+    path: /login_check
+
+logout:
+    path: /logout
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation

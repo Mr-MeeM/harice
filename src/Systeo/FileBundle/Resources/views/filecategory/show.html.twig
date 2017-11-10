@@ -1,0 +1,48 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+    <fieldset>
+        <legend>{{ 'Détails catégorie de fichier'}}</legend>
+    </fieldset>
+    <div class="row">
+        <div class='col-lg-12'>
+            <div class="btn_add pull-right">
+                <ul id='show_action_buttons'>
+                    <li><a href="{{ path('filecategory_index') }}"  class="btn btn-info">Liste <span class="glyphicon glyphicon-th-list"></span></a></li>
+                    <li><a href="{{ path('filecategory_edit', { 'id': fileCategory.id }) }}"  class="btn btn-warning">Modifier  <span class="glyphicon glyphicon-edit"></a></li>
+                    <li>
+                        {{ form_start(delete_form) }}
+
+                        <button class='btn btn-danger delete_form_button' data-msg="Voulez vous vraiement supprimer cette catégorie?" type="button">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
+                        {{ form_end(delete_form) }}
+                    </li>
+                </ul>
+            </div>   
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Nom</th>
+                        <td>{{ fileCategory.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Actif</th>
+                        <td>
+                            {% if fileCategory.active %}
+                                <span class="label label-success">Oui</span>
+                            {% else %}
+                                <span class="label label-danger">Non</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class='col-lg-6'>
+            <div id="ajax_file_container"></div>
+        </div>
+    </div>
+    
+{% endblock %}

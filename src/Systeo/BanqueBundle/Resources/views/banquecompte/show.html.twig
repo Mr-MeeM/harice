@@ -1,0 +1,49 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <fieldset>
+            <legend>Détail compte bancaire</legend>
+    </fieldset>
+    <div class="btn_add pull-right">
+        <ul id='show_action_buttons'>
+            <li><a href="{{ path('banquecompte_index') }}"  class="btn btn-info">Liste des comptes bancaires <span class="glyphicon glyphicon-th-list"></span></a></li>
+            {%if banqueCompte.id != 1%}
+            <li><a href="{{ path('banquecompte_edit', { 'id': banqueCompte.id }) }}"  class="btn btn-warning">Modifier  <span class="glyphicon glyphicon-edit"></a></li>
+            <li>
+                {{ form_start(delete_form) }}
+                
+                <button class='btn btn-danger delete_form_button' data-msg="Voulez vous vraiement supprimer ce compte bancaire?" type="button">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
+                {{ form_end(delete_form) }}
+            </li>
+            {%endif%}
+        </ul>
+    </div>   
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Désignation</th>
+                        <td>{{banqueCompte.name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Banque</th>
+                        <td>{{banqueCompte.banque}}</td>
+                    </tr>
+                    <tr>
+                        <th>RIB</th>
+                        <td>{{banqueCompte.rib}}</td>
+                    </tr>
+                    <tr>
+                        <th>Swift</th>
+                        <td>{{banqueCompte.swift}}</td>
+                    </tr>
+                    <tr>
+                        <th>Iban</th>
+                        <td>{{banqueCompte.iban}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>               
+{% endblock %}

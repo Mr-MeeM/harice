@@ -1,0 +1,4 @@
+services:
+#    systeo_depense.example:
+#        class: Systeo\DepenseBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

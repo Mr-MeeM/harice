@@ -1,0 +1,24 @@
+#systeo_ventebundle_piece_tier{display: none;}
+#ajouter-tier{
+    cursor: pointer;
+}
+
+#lignes-pieces th, #totaux-piece th{
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+}
+#totaux-piece .form-group{
+    margin: 0px !important;
+}
+.delete-ligne-piece{
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+.total-tva-ligne, .total-ttc-ligne{
+    display: none;
+}
+.icones-ligne{
+    text-align: right;
+    margin-top: 5px;
+}

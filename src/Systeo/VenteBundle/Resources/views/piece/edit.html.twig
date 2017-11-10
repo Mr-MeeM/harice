@@ -1,0 +1,245 @@
+{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('bundles/systeovente/css/main.css') }}" type="text/css" />
+    <script  src="{{asset('bundles/systeovente/js/main.js') }}" ></script>
+    <script  src="{{asset('bundles/systeotier/js/main.js') }}" ></script> 
+    <fieldset>
+        <legend>
+            {%if piece.type == "Facture"%}
+                Modification facture
+            {%elseif piece.type == "Devis"%}
+                Modification devis
+            {%elseif piece.type == "Avoir"%}
+                Modification facture d'avoir
+            {%endif%}
+        </legend>
+    </fieldset>
+    <div class="row">
+        <div class="col-lg-12">      
+            <div class="btn_list pull-right">
+                <a href="{{ path('piece_index') }}?type={{piece.type}}"  class="btn btn-info">Liste des {{piece.type}} <span class="glyphicon glyphicon-th-list"></span></a>
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(edit_form) }}
+    <div class='row'>
+        
+        <div class='col-lg-3 col-lg-offset-1'>
+            {{form_widget(edit_form.tier)}}
+            {{form_label(edit_form.tierName)}}
+            <div class="input-group">
+            {{form_widget(edit_form.tierName)}}
+            <div class="input-group-addon" id='ajouter-tier' data-url="{{path('tier_index')}}?client=1"><i class='glyphicon glyphicon-th-list'></i></div>
+            </div>
+            {{form_errors(edit_form.tier)}}
+        </div>
+        <div class='col-lg-2'>
+            {{form_row(edit_form.tierMf)}}
+        </div>
+        <div class='col-lg-5'>
+            {{form_row(edit_form.tierAdresse)}}
+        </div>
+    </div>
+     <div class='row'>
+        <div class='col-lg-3 col-lg-offset-1'>
+            {{form_row(edit_form.date)}}
+        </div>
+        <div class='col-lg-3'>
+            {{form_row(edit_form.numero)}}
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <table class="table table-bordered" id="lignes-pieces">
+                <thead>
+                <tr>
+                    <th style="width: 100px">Code</th>
+                    <th>Désignation</th>
+                    <th style="width: 150px">Prix Unit</th>
+                    <th style="width: 100px">Qté</th>
+                    <th style="width: 100px">TVA</th>
+                    <th style="width: 150px">Total HT</th>
+                    <th style="width: 50px"></th>
+                </tr>
+                </thead>
+                <tbody id="lignes-pieces-body">
+                {%set i = 0%}
+                {%for ligne in edit_form.pieceLignes%}
+                    {%set i = i + 1%}
+                    <tr class="tr-ligne-piece">
+                        <td>{{form_widget(ligne.code)}}</td>
+                        <td>
+                            {{form_widget(ligne.name)}}
+                            <div id="content_name_html_{{i-1}}"></div>
+                            <div class="icones-ligne">
+                                <span id="view_ligne_{{i-1}}" data-index="{{i-1}}" class="btn btn-default btn-xs glyphicon-screenshot-btn"><i class="glyphicon glyphicon-screenshot"></i></span>
+                                <span id="ckeditor_ligne_{{i-1}}" data-index="{{i-1}}" class="btn btn-default btn-xs glyphicon-wrench-btn"><i class="glyphicon glyphicon-wrench"></i></span>
+                                <span id="edit_ligne_{{i-1}}" data-index="{{i-1}}" class="btn btn-default btn-xs glyphicon-pencil-btn"><i class="glyphicon glyphicon-pencil"></i></span>
+                            </div>
+                        </td>
+                        <td>{{form_widget(ligne.prixHt)}}</td>
+                        <td>{{form_widget(ligne.quantite)}}</td>
+                        <td>{{form_widget(ligne.tauxTva,{'attr':{'class':'tva-ligne'}})}}</td>
+                        <td>
+                            {{form_widget(ligne.totalHt)}}
+                            <span class="total-tva-ligne">{{ligne.prixHt.vars.value * ligne.tauxTva.vars.value * ligne.quantite.vars.value /100 }}</span>
+                            <span class="total-ttc-ligne">{{ligne.prixHt.vars.value * ligne.quantite.vars.value }}</span>
+                        </td>
+                        <td style="text-align:center">
+                            {%if loop.index >1%}
+                                <img class='delete-ligne-piece' src="{{asset('img/delete.png')}}" >
+                            {%endif%}
+                        </td>
+                    </tr>
+                {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="row" style="display:none;">
+        <div class="col-lg-10 col-lg-offset-1">
+            {{form_widget(edit_form.lignesAreValid)}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            {{form_errors(edit_form.lignesAreValid)}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <span class="btn btn-primary pull-right" id="btn-ajouter-ligne"><i class="glyphicon glyphicon-plus-sign"></i> Ajouter une ligne</span>
+        </div>
+        <div id="prototype-ligne"
+             data-index="{{i}}"
+             data-prototype='
+             <tr class="tr-ligne-piece">
+                <td>{{ form_widget(edit_form.pieceLignes.vars.prototype.code)|e }}</td>
+                <td>
+                    {{ form_widget(edit_form.pieceLignes.vars.prototype.name)|e }}
+                    <div id="content_name_html_{{i}}"></div>
+                    <div class="icones-ligne">
+                        <span id="view_ligne_{{i}}" data-index="{{i}}" class="btn btn-default btn-xs glyphicon-screenshot-btn"><i class="glyphicon glyphicon-screenshot"></i></span>
+                        <span id="ckeditor_ligne_{{i}}" data-index="{{i}}" class="btn btn-default btn-xs glyphicon-wrench-btn"><i class="glyphicon glyphicon-wrench"></i></span>
+                        <span id="edit_ligne_{{i}}" data-index="{{i}}" class="btn btn-default btn-xs glyphicon-pencil-btn"><i class="glyphicon glyphicon-pencil"></i></span>
+                    </div>
+                </td>
+                <td>{{ form_widget(edit_form.pieceLignes.vars.prototype.prixHt)|e }}</td>
+                <td>{{ form_widget(edit_form.pieceLignes.vars.prototype.quantite)|e }}</td>
+                <td>{{ form_widget(edit_form.pieceLignes.vars.prototype.tauxTva,{'attr':{'class':'tva-ligne'}})|e }}</td>
+                <td>
+                    {{ form_widget(edit_form.pieceLignes.vars.prototype.totalHt)|e }}
+                    <span class="total-tva-ligne"></span>
+                    <span class="total-ttc-ligne"></span>
+                </td>
+                <td style="text-align:center">
+                    <img class="delete-ligne-piece" src="{{asset('img/delete.png')}}" >
+                </td>
+             </tr>
+             '
+        >
+            
+        </div>
+    </div>
+    <br />
+        <div class="row">
+            <div class="col-lg-3 col-lg-offset-8">
+                <table class="table  table-bordered" id="totaux-piece">
+                    <tr>
+                        <th>Total HT</th>
+                        <td>{{form_row(edit_form.montantHt)}}</td>
+                    </tr>
+                    <tr>
+                        <th>Total TVA</th>
+                        <td>{{form_row(edit_form.montantTva)}}</td>
+                    </tr>
+                    <tr>
+                        <th>Timbre</th>
+                        <td>{{form_row(edit_form.montantTimbre,{'attr':{'value':timbre}})}}</td>
+                    </tr>
+                    <tr>
+                        <th>Total TTC</th>
+                        <td>{{form_row(edit_form.montantTtc)}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-lg-offset-1">
+                <input type="submit" value="Enregistrer" class="btn btn-success"/>
+            </div>
+        </div>    
+        <br />
+    {{ form_end(edit_form) }}
+    <script>
+        $(document).ready(function(){
+            
+            if ($('#systeo_ventebundle_piece_date').val() === '') {
+                $('#systeo_ventebundle_piece_date').val('{{ "now"|date("d/m/Y") }}');
+            }
+
+            if ($('#systeo_ventebundle_piece_numero').val() === '') {
+                $('#systeo_ventebundle_piece_numero').val('{{ numero }}');
+            }
+            
+           {% if tier is not null %}
+            $('#systeo_ventebundle_piece_tier').val('{{ tier.id }}');
+                    $('#systeo_ventebundle_piece_tierName').val('{{ tier.name }}');
+                    $('#systeo_ventebundle_piece_tierMf').val('{{ tier.mf }}');
+                    $('#systeo_ventebundle_piece_tierAdresse').val('{{ tier.rueNumero1 }} {{ tier.cp1 }} {{ tier.ville1 }} {{ tier.pays1 }}');
+            {% endif %}
+        });
+    </script>
+    <div class="modal fade" id="myModalListeTier" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="my-modal-large" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalListeTierLabel">Liste des Clients / Prospects</h4>
+                </div>
+                <div class="modal-body" id="myModalListeTierBody">
+                    
+                </div>
+                <span 
+                    id="affectationTier" 
+                    data-id="systeo_ventebundle_piece_tier"
+                    data-name="systeo_ventebundle_piece_tierName"
+                    data-mf="systeo_ventebundle_piece_tierMf"
+                    data-adresse="systeo_ventebundle_piece_tierAdresse"
+                      ></span>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalLigneEditor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLigneEditorLabel">Désignation</h4>
+                </div>
+                <div class="modal-body" id="myModalLigneEditorBody">
+                    {{ form_start(ckeditor) }}
+                        {{form_widget(ckeditor.designation)}}
+                    {{ form_end(ckeditor) }}
+                    <p>
+                        <br />
+                        <span class="btn btn-primary" id="valider-ckeditor" index="-1">Valider</span>
+                    </p>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+                    
+                    <style>
+                        .help-block{
+                            color:#a94442 !important;
+                        }
+                    </style>
+{% endblock %}

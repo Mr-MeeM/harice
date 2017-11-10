@@ -1,0 +1,35 @@
+{% block body %}
+    
+    <table class="table table-bordered index_table">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Date</th>
+                <th class="text-right">Montant TTC</th>
+                <th class="text-right">Solde</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for piece in pieces %}
+                <tr>
+                    <td>{{piece.numero}}</td>
+                    <td>{%if piece.date%}{{piece.date|date('d/m/Y')}}{%endif%}</td>
+                    <td class='text-right' nowrap>{%if piece.montantTtc%}{{piece.montantTtc|number_format(3, '.', ' ')}}{%endif%}</td>
+                    <td class='text-right' nowrap>
+                        {%if (piece.solde is not null) and (piece.solde >0) %}
+                            <b><span style='color: red;'>
+                                {{piece.solde|number_format(3, '.', ' ')}}
+                        {%else%}        
+                            <b><span style='color: green;'>
+                                0.000
+                        {%endif%}
+                    </td>
+                    <td>
+                        <a class="btn btn-info btn-xs" href="{{path('piece_export_affecter_local')}}?type=affecter&vue={{vue}}&piece_id={{piece.id}}&piece_export_id={{piece_export_id}}">Affecter</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>  
+{% endblock %}

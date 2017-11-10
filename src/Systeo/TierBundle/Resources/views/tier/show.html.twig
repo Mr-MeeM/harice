@@ -1,0 +1,130 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <script  src="{{ asset('bundles/systeotier/js/main.js') }}" ></script>
+    <fieldset>
+            <legend>Détails tiers</legend>
+    </fieldset>
+    <div class="btn_add pull-right">
+        <ul id='show_action_buttons'>
+            <li><a href="{{ path('tier_index') }}"  class="btn btn-info">Liste des tiers <span class="glyphicon glyphicon-th-list"></span></a></li>
+            <li><a href="{{ path('tier_edit', { 'id': tier.id }) }}"  class="btn btn-warning">Modifier  <span class="glyphicon glyphicon-edit"></a></li>
+            <li>
+                {{ form_start(delete_form) }}
+                
+                <button class='btn btn-danger delete_form_button' data-msg="Voulez vous vraiement supprimer ce tier?" type="button">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>   
+    <div class="row">
+        <div class="col-lg-8">
+            <table class="table table-striped">
+                <tbody>
+                    <tr class="tier-personne-morale">
+                        <th class="col-lg-4">Raison sociale</th>
+                        <td>
+                            {{tier.rs}}
+                        </td>
+                    </tr>
+                    <tr class="tier-personne-physique">
+                        <th class="col-lg-4">Prénom & Nom</th>
+                        <td>
+                            {{tier.firstName}} {{tier.lastName}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Client</th>
+                        <td>
+                            {% if tier.client %}
+                                <span class="label label-success">Oui</span>
+                            {% else %}
+                                <span class="label label-danger">Non</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Fournisseur</th>
+                        <td>
+                            {% if tier.fournisseur %}
+                                <span class="label label-success">Oui</span>
+                            {% else %}
+                                <span class="label label-danger">Non</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Employé</th>
+                        <td>
+                            {% if tier.employe %}
+                                <span class="label label-success">Oui</span>
+                            {% else %}
+                                <span class="label label-danger">Non</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr class="tier-client">
+                        <th>Matricule fiscale</th>
+                        <td>
+                            {{tier.mf}}
+                        </td>
+                    </tr>
+                    <tr class="tier-client">
+                        <th>Registre de commerce</th>
+                        <td>
+                            {{tier.rc}}
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <th>Téléphones</th>
+                        <td>
+                            {{tier.tel1}} {%if tier.tel2 %}/ {{tier.tel2}}{%endif%}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Emails</th>
+                        <td>
+                            {{tier.email1}} {%if tier.email2 %}/ {{tier.email2}}{%endif%}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Fax</th>
+                        <td>
+                            {{tier.fax1}} 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Rue / Numéro</th>
+                        <td>
+                            {{tier.rueNumero1}} 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Code postal</th>
+                        <td>
+                            {{tier.cp1}} 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Ville</th>
+                        <td>
+                            {{tier.ville1}} 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Pays</th>
+                        <td>
+                            {{tier.pays1}} 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        tierTypeChanges('{{tier.type}}');
+        tierClientChanges('{{tier.client}}');
+        tierFournisseurChanges('{{tier.fournisseur}}');
+    </script>
+{% endblock %}

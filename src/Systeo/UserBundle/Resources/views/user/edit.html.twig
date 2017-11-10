@@ -1,0 +1,48 @@
+{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+     <fieldset>
+            <legend>{{ 'Modifier utilisateur'}}</legend>
+    </fieldset>
+    <div class="row">
+        <div class="col-lg-12">      
+            <div class="btn_list pull-right">
+                <a href="{{ path('user_index') }}"  class="btn btn-info">Liste <span class="glyphicon glyphicon-th-list"></span></a>
+            </div>
+        </div>
+    </div>
+    
+    {{ form_start(edit_form) }}
+    <div class="row">
+        <div class="col-lg-6">{{ form_row(edit_form.firstName) }}</div>
+        <div class="col-lg-6">{{ form_row(edit_form.lastName) }}</div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">{{ form_row(edit_form.email) }}</div>
+        <div class="col-lg-6">
+            <br />
+            {{ form_row(edit_form.active) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">{{ form_row(edit_form.username) }}</div>
+        <div class="col-lg-6">{{ form_row(edit_form.passwordEdit) }}</div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(edit_form.roles) }}
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(edit_form.teams) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <input type="submit" value="Enregistrer" class="btn btn-success"/>
+        </div>
+    </div>
+    {{ form_end(edit_form) }}
+
+    
+{% endblock %}

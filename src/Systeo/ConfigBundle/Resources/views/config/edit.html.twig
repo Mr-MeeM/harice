@@ -1,0 +1,111 @@
+{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('bundles/systeofile/css/main.css') }}" type="text/css" />
+    <script  src="{{ asset('bundles/systeofile/js/upload-simple-file.js') }}" ></script>
+    <fieldset>
+            <legend>{{ 'Modification configuration'}}</legend>
+    </fieldset>
+    {{ form_start(edit_form) }}
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(edit_form.companyName) }}
+        </div>
+        <div class="col-lg-2">
+            {{ form_row(edit_form.logo) }}
+            <div id='logo-config' >
+                <img src="{{asset('files/Parametres/')}}{{config.logo}}">
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <br />
+            <span 
+                id='new_file'
+                class="btn btn-warning simple_file_select"
+                data-target-form="simple-ajax-form" 
+                data-target-field="#systeo_configbundle_config_logo"
+                data-url="{{path('simple_file_ajax_add')}}" 
+                data-tmp='{{asset('tmp')}}'
+                data-target-destination="#logo-config"
+            >Changer le logo</span>
+            
+            <span class="icones_file_upload">
+                <span id="icones_upload_loading" class="ajax_simple_file_icones_loading icones_upload_loading"></span>
+                <span id="icones_upload_success" class="ajax_simple_file_icones_loading icones_upload_success"></span>
+                <span id="icones_upload_error" class="ajax_simple_file_icones_loading icones_upload_error"></span>
+            </span>
+            <span class="selected_file"></span>
+            <span class="display-block"></span>
+            <div class="alert alert-danger simple_file_alert" id="upload_file_error_message"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(edit_form.tauxTva) }}
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(edit_form.droitTimbre) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            {{ form_row(edit_form.mf) }}
+        </div>
+        <div class="col-lg-4">
+            {{ form_row(edit_form.rc) }}
+        </div>
+        <div class="col-lg-4">
+            {{ form_row(edit_form.cd) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12"><h3>Coordonnées</h3></div>
+        <div class="col-lg-3">
+            {{ form_row(edit_form.tel) }}
+        </div>
+        <div class="col-lg-3">
+            {{ form_row(edit_form.fax) }}
+        </div>
+        <div class="col-lg-3">
+            {{ form_row(edit_form.email) }}
+        </div>
+        <div class="col-lg-3">
+            {{ form_row(edit_form.web) }}
+        </div>
+        <div class="col-lg-12">
+            {{ form_row(edit_form.adresse) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12"><h3>Paramètres d'impression (banque)</h3></div>
+        <div class="col-lg-4">
+            {{ form_row(edit_form.banque) }}
+        </div>
+        <div class="col-lg-4">
+            {{ form_row(edit_form.rib) }}
+        </div>
+        <div class="col-lg-4">
+            {{ form_row(edit_form.swift) }}
+        </div>
+        <div class="col-lg-12">
+            {{ form_row(edit_form.iban) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12"><h3>Autres paramètres d'impression</h3></div>
+        <div class="col-lg-3">
+            {{ form_row(edit_form.couleur1) }}
+        </div>
+    </div>
+    
+     <input type="submit" value="Enregistrer" class="btn btn-success"/>
+     <p>&nbsp;</p>
+    {{ form_end(edit_form) }}
+    
+    <div class="form-upload-file">
+        {{ form_start(file_form, {'attr': {'id': 'simple-ajax-form'}}) }}
+            {{ form_row(file_form.filename, {'attr': {'class': 'simple-file-field'}}) }}
+        {{ form_end(file_form) }}
+    </div>
+{% endblock %}

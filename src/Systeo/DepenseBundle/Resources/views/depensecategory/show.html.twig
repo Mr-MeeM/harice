@@ -1,0 +1,35 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <fieldset>
+            <legend>Détail catgéorie de dépense</legend>
+    </fieldset>
+    <div class="btn_add pull-right">
+        <ul id='show_action_buttons'>
+            <li><a href="{{ path('depensecategory_index') }}"  class="btn btn-info">Liste des catégories de dépense <span class="glyphicon glyphicon-th-list"></span></a></li>
+            <li><a href="{{ path('depensecategory_edit', { 'id': depenseCategory.id }) }}"  class="btn btn-warning">Modifier  <span class="glyphicon glyphicon-edit"></a></li>
+            <li>
+                {{ form_start(delete_form) }}
+                
+                <button class='btn btn-danger delete_form_button' data-msg="Voulez vous vraiement supprimer cette catégorie de dépense?" type="button">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>   
+    <div class="row">
+        <div class="col-lg-6">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Désignation</th>
+                        <td>{{depenseCategory.name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Parent</th>
+                        <td>{%if depenseCategory.parent%}{{depenseCategory.parent.name}}{%endif%}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>               
+{% endblock %}

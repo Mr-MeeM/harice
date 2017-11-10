@@ -1,0 +1,171 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <script  src="{{ asset('bundles/systeofile/js/main.js') }}" ></script>
+    <script  src="{{asset('bundles/systeoreglement/js/main.js') }}" ></script>
+    <script language="javascript">
+        var AjaxFileConf = {
+                container:'#ajax_file_container',
+                entity:'Depense',
+                entity_id:'{{ depense.id }}',
+                uploadPath:'{{ path('addajaxfile') }}?public=false',
+                diplayDocs:1,
+                displayGallery:0,
+                docsGaleryLoadingPath:'{{path('ajaxloadhiddenfiles')}}'
+            };
+        
+        load_view_ajax_file();
+    </script>
+    <script  src="{{asset('bundles/systeodepense/js/main.js') }}" ></script> 
+    <script  src="{{asset('bundles/systeobanque/js/main.js') }}" ></script>
+    <fieldset>
+            <legend>Détails d'une dépense</legend>
+    </fieldset>
+    <div class="btn_add pull-right">
+        <ul id='show_action_buttons'>
+            <li><a href="{{ path('depense_index') }}"  class="btn btn-info">Liste des dépenses <span class="glyphicon glyphicon-th-list"></span></a></li>
+            <li><a href="{{ path('depense_edit', { 'id': depense.id }) }}"  class="btn btn-warning">Modifier  <span class="glyphicon glyphicon-edit"></a></li>
+            <li>
+                {{ form_start(delete_form) }}
+                
+                <button class='btn btn-danger delete_form_button' data-msg="Voulez vous vraiement supprimer cette dépense?" type="button">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>   
+    <div class="row">
+        <div class="col-lg-6">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Catégorie</th>
+                        <td>{%if depense.depenseCategory%}{{depense.depenseCategory.name}}{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <th>Tier</th>
+                        <td>{%if depense.tier%}{{depense.tier.name}}{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <th>Libellé</th>
+                        <td>{{depense.name}}</td>
+                    </tr>
+                     <tr>
+                        <th>Remarque</th>
+                        <td>{{depense.remarque}}</td>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <td>{%if depense.date%}{{depense.date|date('d/m/Y')}}{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <th>Montant HT</th>
+                        <td>{%if depense.montantHt%}{{depense.montantHt|number_format(3, '.', ' ')}}{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <th>Montant TVA</th>
+                        <td>{%if depense.montantTva%}{{depense.montantTva|number_format(3, '.', ' ')}}{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <th>Montant TTC</th>
+                        <td>{%if depense.montantTtc%}{{depense.montantTtc|number_format(3, '.', ' ')}}{%endif%}</td>
+                    </tr>
+                    {%set class_solde = "solde-non-null"%}
+                    {%if depense.solde == 0%}
+                        {%set class_solde = "solde-null"%}
+                    {%endif%}
+                    <tr class="{{class_solde}}">
+                        <th>Solde</th>
+                        <td>
+                            {{depense.solde|number_format(3, '.', ' ')}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6" id="ajax_file_container">
+
+        </div>
+    </div>   
+    <div class="row">
+        <div class="col-lg-9">
+            <h4>Liste des réglements</h4>
+            <div class="pull-right">
+                <span class="btn btn-success modal-regelement" data-label="Ajouter réglement" data-url="{{path('reglement_new_ajax')}}?type=depense&entite={{depense.id}}">Ajouter Réglement</span>
+                <span class="btn btn-primary affecter-reglement" data-url='{{path('banqueoperation_index')}}?origin_vue=depense&origin_vue_id={{depense.id}}'>Affecter Réglement</span>
+            </div>
+            <div class="clear-both"></div>
+            <br />
+            {%if depense.reglements%}
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Libellé</th>
+                        <th class="text-right">Montant</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Banque/Caisse</th>
+                        <th>Action</th>
+                    </tr>
+                    {%set montantTotal = 0%}
+                    {%for reg in depense.reglements%}
+                        {%set montantTotal = montantTotal + reg.montant%}
+                        <tr>
+                            <td>{{reg.name}}</td>
+                            <td class="text-right">{%if reg.montant%}{{reg.montant|number_format(3, '.', ' ')}}{%endif%}</td>
+                            <td>{{reg.type}}</td>
+                            <td>{%if reg.date%}{{reg.date|date('d/m/Y')}}{%endif%}</td>
+                            <td>
+                                
+                                {%if reg.BanqueOperation%}
+                                    <a class='btn btn-xs btn-danger' href='{{path('reglement_depense_desaffecter_operation_bancaire',{'id':reg.id})}}'>Désaffecter</a> (obc-{{reg.BanqueOperation.id}})
+                                {%else%}
+                                    <span class="btn btn-xs btn-primary affecter-reglement" data-url='{{path('banqueoperation_index')}}?origin_vue=depense&origin_vue_id={{depense.id}}&origin_type=reglement&origin_type_id={{reg.id}}'>Affecter</span>
+                                {%endif%}
+                            </td>
+                            <td>
+                                <ul id="index_action_buttons">
+                                    <li><span  data-label="Modifier réglement" data-url="{{path('reglement_edit_ajax',{'id':reg.id})}}?type=depense&entite={{depense.id}}" class="btn btn-xs btn-warning  modal-regelement">Modifier</span></li>
+                                    <li><a href='{{path('reglement_show',{'id':reg.id})}}' class="btn btn-xs btn-default">Détails</a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    {%endfor%}
+                    <tr>
+                        <td></td>
+                        <td class="text-right">{{montantTotal|number_format(3, '.', ' ')}}</td>
+                        <td colspan="4"></td>
+                    </tr>
+                </table>
+            {%endif%}
+        </div>
+    </div>
+    <div class="modal fade" id="myModalRegelment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalRegelmentLabel"></h4>
+                </div>
+                <div class="modal-body" id="myModalRegelmentBody">
+                    ...
+                </div>
+                
+            </div>
+        </div>
+    </div>
+        
+   <div class="modal fade" id="myModalAffectation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="my-modal-large" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalAffectationLabel">Affecter réglement</h4>
+                </div>
+                <div class="modal-body" id="myModalAffectationBody">
+                    ...
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+    <fieldset>
+        <legend>{{ 'Détails catégorie de tâche'}}</legend>
+    </fieldset>
+    <div class="row">
+        <div class='col-lg-12'>
+            <div class="btn_add pull-right">
+                <ul id='show_action_buttons'>
+                    <li><a href="{{ path('team_index') }}"  class="btn btn-info">Liste <span class="glyphicon glyphicon-th-list"></span></a></li>
+                    <li><a href="{{ path('team_edit', { 'id': team.id }) }}"  class="btn btn-warning">Modifier  <span class="glyphicon glyphicon-edit"></a></li>
+                    <li>
+                        {{ form_start(delete_form) }}
+
+                        <button class='btn btn-danger delete_form_button' data-msg="Voulez vous vraiement supprimer cette team?" type="button">Supprimer <span class="glyphicon glyphicon-trash"></span></button>
+                        {{ form_end(delete_form) }}
+                    </li>
+                </ul>
+            </div>   
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Nom</th>
+                        <td>{{ team.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ team.description }}</td>
+                    </tr>
+                    <tr>
+                        <th>Utilisateurs</th>
+                        <td>
+                            <ul>
+                                {% for user in team.users%}
+                                    <li>{{user.prenomNom}}</li>
+                                {% endfor%}
+                            </ul>
+                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class='col-lg-6'>
+            <div id="ajax_file_container"></div>
+        </div>
+    </div>
+    
+{% endblock %}

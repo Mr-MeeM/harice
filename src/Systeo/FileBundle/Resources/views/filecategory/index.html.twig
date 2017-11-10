@@ -1,0 +1,84 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <fieldset>
+                <legend>{{ 'Liste des catégories de fichier'}}</legend>
+            </fieldset>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="btn_add pull-right">
+                <a href="{{ path('filecategory_new') }}"  class="btn btn-success pull-right">Ajouter <span class="glyphicon glyphicon-plus"></span></a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row search_form">
+                {{ form_start(form) }}
+                <div class="col-lg-3">
+                    {{ form_row(form.search,{'value': parametre.search}) }}
+                </div>
+                <div class="col-lg-2">
+                    {{ form_row(form.active,{'value': parametre.active}) }}
+                </div>
+                <div class="col-lg-1">
+                    <input type="submit" value="Rechercher" class="btn btn-info"/>
+                </div>
+                <div class="col-lg-1">
+                    <a href="{{ path('filecategory_index') }}"  class="btn btn-danger">Réinitialiser</a>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-bordered index_table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Actif</th>
+                        <th id="index_th_action">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for filecategory in fileCategories %}
+                        <tr>
+                            <td><a href="{{ path('filecategory_show', { 'id': filecategory.id }) }}">{{ filecategory.name }}</a></td>
+                            <td>
+                                {% if filecategory.active %}
+                                    <span class="label label-success">Oui</span>
+                                {% else %}
+                                    <span class="label label-danger">Non</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <ul id="index_action_buttons">
+                                    <li>
+                                        <a href="{{ path('filecategory_show', { 'id': filecategory.id }) }}"  class="btn btn-primary btn-xs">Détails <span class="glyphicon glyphicon-search"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('filecategory_edit', { 'id': filecategory.id }) }}"  class="btn btn-warning btn-xs">Modifier  <span class="glyphicon glyphicon-edit"></a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="navigation">
+                {{ knp_pagination_render(fileCategories) }}
+            </div> 
+        </div>
+    </div>
+{% endblock %}

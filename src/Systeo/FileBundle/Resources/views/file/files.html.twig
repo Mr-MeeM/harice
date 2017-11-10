@@ -1,0 +1,77 @@
+{%if public == true%}
+{% if type == 'doc' %}
+    {% if files|length > 0 %}
+        <ul id="list_file_links">
+            {% for file in files %}
+                {% set tab = file.path|split('.') %}
+                {% set extension = tab[(tab|length - 1)] %}
+                
+                <li id="file-{{file.id}}">
+                    <span class="icon-file"><img src="{{ asset('bundles/systeofile/img/fileicons/'~extension~'.png') }}" /></span>
+
+                    <a href="{{ asset('files/') }}{{file.path}}" target="_blank">{{file.name}}</a>
+                    
+                    <span class="edit_file_icone"
+                        data-url="{{ path('file_edit_ajax' , { 'id': file.id }) }}"
+                        data-file-id="{{file.id}}">
+                        <img src="{{ asset('bundles/systeofile/img/edit.svg') }}" />
+                    </span>
+                    <span class="delete_file_icone"
+                        data-url="{{ path('file_delete_ajax' , { 'id': file.id }) }}"
+                        data-file-id="{{file.id}}">
+                        <img src="{{ asset('bundles/systeofile/img/error.svg') }}" />
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% elseif (type == 'photo') and (public == true)  %}
+   {% if files|length > 0 %}
+        <ul id="list_photo_gallery">
+            {% for image in files %}
+                <li id="image-gallery-{{image.id}}">
+                    <div class="image_galler_display">
+                        <img src="{{ asset('files/') }}/{{image.path}}" alt="{{image.name}}" />
+                        <span class="edit_image_galler_display"
+                            data-url="{{ path('file_edit_ajax' , { 'id': image.id }) }}"
+                            data-file-id="{{image.id}}">
+                            <img src="{{ asset('bundles/systeofile/img/edit.svg') }}" />
+                        </span>
+                        <span class="delete_image_galler_display"
+                              data-url="{{ path('file_delete_ajax' , { 'id': image.id }) }}"
+                              data-file-id="{{image.id}}">
+                            <img src="{{ asset('bundles/systeofile/img/error.svg') }}" />
+                        </span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endif %}
+{%else%}
+    {% if files|length > 0 %}
+        <ul id="list_file_links">
+            {% for file in files %}
+                {% set tab = file.path|split('.') %}
+                {% set extension = tab[(tab|length - 1)] %}
+                
+                <li id="file-{{file.id}}">
+                    <span class="icon-file"><img src="{{ asset('bundles/systeofile/img/fileicons/'~extension~'.png') }}" /></span>
+                    
+                    <a href="{{ path('file_open',{'fichier':file.filename}) }}" target="_blank">{{file.name}}</a>
+
+                    <span class="edit_file_icone"
+                        data-url="{{ path('file_edit_ajax' , { 'id': file.id }) }}"
+                        data-file-id="{{file.id}}">
+                        <img src="{{ asset('bundles/systeofile/img/edit.svg') }}" />
+                    </span>
+                    <span class="delete_file_icone"
+                        data-url="{{ path('file_delete_ajax' , { 'id': file.id }) }}?public=false"
+                        data-file-id="{{file.id}}">
+                        <img src="{{ asset('bundles/systeofile/img/error.svg') }}" />
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endif %}

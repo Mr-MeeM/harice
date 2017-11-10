@@ -1,0 +1,3 @@
+systeo_reglement_homepage:
+    path:     /
+    defaults: { _controller: SysteoReglementBundle:Default:index }

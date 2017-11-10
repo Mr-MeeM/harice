@@ -1,0 +1,3 @@
+systeo_tier_homepage:
+    path:     /
+    defaults: { _controller: SysteoTierBundle:Default:index }

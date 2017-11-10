@@ -1,0 +1,17 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+    app.token_authenticator:
+        class: AppBundle\Security\TokenAuthenticator
+        arguments: ['@doctrine.orm.entity_manager']
+    symfony.form.type_guesser.tree:
+        class: Yavin\Symfony\Form\Type\TreeTypeGuesser
+        arguments: [ "@doctrine" ]
+        tags:
+            - { name: form.type_guesser }
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

@@ -1,0 +1,48 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+     <fieldset>
+            <legend>{{ 'Nouvel utilisateur'}}</legend>
+    </fieldset>
+    <div class="row">
+        <div class="col-lg-12">      
+            <div class="btn_list pull-right">
+                <a href="{{ path('user_index') }}"  class="btn btn-info">Liste <span class="glyphicon glyphicon-th-list"></span></a>
+            </div>
+        </div>
+    </div>
+    
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-lg-6">{{ form_row(form.firstName) }}</div>
+        <div class="col-lg-6">{{ form_row(form.lastName) }}</div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">{{ form_row(form.email) }}</div>
+        <div class="col-lg-6">
+            <br />
+            {{ form_row(form.active) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">{{ form_row(form.username) }}</div>
+        <div class="col-lg-6">{{ form_row(form.password) }}</div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(form.roles) }}
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.teams) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <input type="submit" value="Enregistrer" class="btn btn-success"/>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+    
+{% endblock %}

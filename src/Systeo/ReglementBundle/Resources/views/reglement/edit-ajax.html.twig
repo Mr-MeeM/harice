@@ -1,0 +1,30 @@
+{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+{% block body %}
+   <style>
+     .datepicker{z-index:1151 !important;}
+    </style>
+    {{ form_start(edit_form, {'attr': {'id':'reglement-ajax-form','action':path('reglement_edit_ajax',{'id':reglement.id})~'?type='~type~'&entite='~entite,'novalidate': 'novalidate'}}) }}
+        <div class="row">
+            <div class="col-lg-12">
+                {{form_row(edit_form.name)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                {{form_row(edit_form.type)}}
+            </div>
+            <div class="col-lg-4">
+                {{form_row(edit_form.date)}}
+            </div>
+            <div class="col-lg-4">
+                {{form_row(edit_form.montant)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <input type="button" id="reglement-ajax-button" value="Enregistrer" class="btn btn-success"/>
+            </div>
+        </div>
+    {{ form_end(edit_form) }}
+    
+{% endblock %}

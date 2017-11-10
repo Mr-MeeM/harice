@@ -1,0 +1,4 @@
+services:
+#    systeo_file.example:
+#        class: Systeo\FileBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

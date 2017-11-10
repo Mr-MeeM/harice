@@ -1,0 +1,28 @@
+{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <fieldset>
+            <legend>{{ 'Modifier catégorie de dépense'}}</legend>
+    </fieldset>
+    <div class="row">
+        <div class="col-lg-12">      
+            <div class="btn_list pull-right">
+                <a href="{{ path('depensecategory_index') }}"  class="btn btn-info">Liste des catégories de dépense <span class="glyphicon glyphicon-th-list"></span></a>
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(edit_form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div class="row">
+        <div class="col-lg-4">
+            {{ form_row(edit_form.name) }}
+        </div>
+        <div class="col-lg-4">
+            {{ form_row(edit_form.parent) }}
+        </div>
+    </div>
+     <input type="submit" value="Enregistrer" class="btn btn-success"/>
+    {{ form_end(edit_form) }}
+
+{% endblock %}

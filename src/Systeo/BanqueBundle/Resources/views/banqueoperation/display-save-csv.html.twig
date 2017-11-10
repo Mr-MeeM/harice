@@ -1,0 +1,75 @@
+{% extends 'layout.html.twig' %}
+{% block body %}
+
+    <link rel="stylesheet" href="{{ asset('bundles/systeofile/css/main.css') }}" type="text/css" />
+    <script  src="{{ asset('js/upload-files.js') }}" ></script>   
+    <script  src="{{asset('bundles/systeobanque/js/main.js') }}" ></script>   
+    <fieldset>
+        <legend>Importer opération bancaires</legend>
+    </fieldset>
+    <div class="btn_add pull-right">
+        <ul id='show_action_buttons'>
+            <li><a href="{{ path('banqueoperation_index') }}"  class="btn btn-info">Liste des opérations bancaires <span class="glyphicon glyphicon-th-list"></span></a></li>
+        </ul>
+    </div>   
+    <div class="clear-both"></div>
+    <form method="POST"> 
+    <div class='row'>
+        <div class='col-lg-4'>
+            <select name='compte' class='form-control' required>
+                <option value=''>Veuillez choisir une compte</option>
+                {%for compte in comptes%}
+                    <option value='{{compte.id}}'>{{compte.name}}</option>
+                {%endfor%}
+            </select>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-lg-12'>
+                <table class="table table-bordered index_table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Date valeur</th>
+                            <th>Libellé</th>
+                            <th style="text-align: right">Débit</th>
+                            <th style="text-align: right">Crédit</th>
+                            <th style="text-align: right">Solde</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for op in data %}
+                            <tr>
+                                <td>{{op['date']}}</td>
+                                <td>{{op['date_valeur']}}</td>
+                                <td>{{op['i_libelle']}}</td>
+                                <td style="text-align: right">{%if op['i_debit']!=''%}{{op['i_debit']|number_format('3','.',' ')}}{%endif%}</td>
+                                <td style="text-align: right">{%if op['i_credit']!=''%}{{op['i_credit']|number_format('3','.',' ')}}{%endif%}</td>
+                                <td style="text-align: right">{%if op['i_solde']!=''%}{{op['i_solde']|number_format('3','.',' ')}}{%endif%}</td>
+                                <td>
+                                    <input type="hidden" name="data[{{loop.index}}][date]" value='{{op['i_date']}}'>
+                                    <input type="hidden" name="data[{{loop.index}}][date_valeur]" value='{{op['i_date_valeur']}}'>
+                                    <input type="hidden" name="data[{{loop.index}}][libelle]" value='{{op['i_libelle']}}'>
+                                    <input type="hidden" name="data[{{loop.index}}][debit]" value='{%if op['i_debit']!=''%}{{op['i_debit']|number_format('3','.','')}}{%endif%}'>
+                                    <input type="hidden" name="data[{{loop.index}}][credit]" value='{%if op['i_credit']!=''%}{{op['i_credit']|number_format('3','.','')}}{%endif%}'>
+                                     <input type="hidden" name="data[{{loop.index}}][solde]" value='{%if op['i_solde']!=''%}{{op['i_solde']|number_format('3','.','')}}{%endif%}'>
+                                    <span class="delete_line_csv"><img src="{{ asset('img/delete.png') }}"></span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            
+        </div>
+    </div>
+    <div class='row'>
+    <div class='col-lg-1 col-lg-offset-5'>
+        <input type='submit' class='btn btn-success' value='Enregistrer'>
+    </div>
+           </div>         
+    </form>
+    
+    <p>&nbsp;</p>
+{% endblock %}

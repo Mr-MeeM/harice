@@ -1,0 +1,43 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <script  src="{{asset('bundles/systeobanque/js/main.js') }}" ></script>   
+    <fieldset>
+            <legend>{{ 'Nouvelle opération bancaire'}}</legend>
+    </fieldset>
+    <div class="row">
+        <div class="col-lg-12">      
+            <div class="btn_list pull-right">
+                <a href="{{ path('banqueoperation_index') }}"  class="btn btn-info">Liste des opérations bancaires <span class="glyphicon glyphicon-th-list"></span></a>
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-lg-3">
+            {{ form_row(form.banqueCompte) }}
+        </div>
+        <div class="col-lg-9">
+            {{ form_row(form.name) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+            {{ form_row(form.debit) }}
+        </div>
+        <div class="col-lg-3">
+            {{ form_row(form.credit) }}
+        </div>
+        <div class="col-lg-3">
+            {{ form_row(form.date) }}
+        </div>
+        <div class="col-lg-3">
+            {{ form_row(form.dateValeur) }}
+        </div>
+    </div>
+     <input type="submit" value="Enregistrer" class="btn btn-success"/>
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -1,0 +1,83 @@
+{% block body %}
+
+    <link rel="stylesheet" href="{{ asset('bundles/systeofile/css/main.css') }}" type="text/css" />
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="ajax_add_file">
+                {{ form_start(form, {'attr': {'id': 'ajax_add_file_form'}}) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+            </div>
+
+            <div id="file_upload_buttons">
+                
+                <input type="button" class="btn btn-success" name="new_file" id="new_file" value="Ajouter nouveau fichier" />
+                <input type="button" class="btn btn-info" data-url="{{ path('addajaxfile') }}" name="start_upload" id="start_upload" value="Ok" />
+                <span id="file_name_value"></span>
+            </div>
+
+            <div id="file_upload_images">
+                <span id="ajax_file_upload_loading" class="ajax_file_icones_loading"></span>
+                <span id="ajax_file_upload_success" class="ajax_file_icones_loading"></span>
+                <span id="ajax_file_upload_error" class="ajax_file_icones_loading"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger"  id="upload_file_error_message">
+            </div>
+        </div>
+    </div>
+    <br />       
+    {% if params.liste_doc %}
+        <script language="text/javascript">
+            display_files('doc');
+        </script>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Documents liés</div>
+                    <div class="panel-body">
+                        <img  id="loading_files_list" src="{{ asset('img/loading.svg') }}" /> 
+                        <div id="files_list">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if params.gallery_photo %}
+        <script language="text/javascript">
+            display_files('photo');
+        </script>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Gallerie photos</div>
+                <div class="panel-body">
+                    <img id="loading_photos_gallery" src="{{ asset('img/loading.svg') }}" /> 
+                    <div id="photos_gallery">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+<div class="modal fade" id="modal_edit_ajax_file" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modification fichier</h4>
+            </div>
+            <div class="modal-body" id="modal-edit-ajax-file-body">
+               <img src="{{ asset('bundles/systeofile/img/loading.svg') }}" />
+            </div>
+        </div>
+    </div>
+</div>
