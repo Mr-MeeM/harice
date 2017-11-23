@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Doctrine\ORM\EntityManager;
 
 class PieceLigneType extends AbstractType
@@ -56,7 +57,11 @@ class PieceLigneType extends AbstractType
                     "required" => false,
                     'attr' => [
                         'class'=>'total-ht-ligne',
-                        'autocomplete' => 'off',]]);
+                        'autocomplete' => 'off',]])
+                ->add('tauxFodec', HiddenType::class, [
+                    "label" => false,
+                    "required" => false,])
+                ;
     }
     
     /**

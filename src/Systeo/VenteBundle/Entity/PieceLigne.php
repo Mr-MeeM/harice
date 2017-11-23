@@ -70,6 +70,13 @@ class PieceLigne
      */
     private $totalHt;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="taux_fodec", type="float", nullable=true)
+     */
+    private $tauxFodec;
+
 
     /**
      * Get id
@@ -267,5 +274,29 @@ class PieceLigne
         }
         
         return false;
+    }
+
+    /**
+     * Set tauxFodec
+     *
+     * @param float $tauxFodec
+     *
+     * @return PieceLigne
+     */
+    public function setTauxFodec($tauxFodec)
+    {
+        $this->tauxFodec = $tauxFodec;
+
+        return $this;
+    }
+
+    /**
+     * Get tauxFodec
+     *
+     * @return float
+     */
+    public function getTauxFodec()
+    {
+        return $this->tauxFodec;
     }
 }

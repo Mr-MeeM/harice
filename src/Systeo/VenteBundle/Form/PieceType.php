@@ -96,6 +96,12 @@ class PieceType extends AbstractType
                 ->add('lignesAreValid', TextType::class,[
                     "required" => false,
                 ])
+                ->add('montantFodec', TextType::class, [
+                    "label" => false,
+                    "required" => false,
+                    'attr' => [
+                        'autocomplete' => 'off',]])
+                
                 ;
     }
     

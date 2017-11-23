@@ -126,7 +126,7 @@
                 top: 1080px;
                 height: 150px;
             }
-            
+
             #cachet-signature{
                 border: 1px solid {{border}};
                 padding: 10px;
@@ -154,7 +154,7 @@
                 border-bottom: 1px solid {{border}};
                 height: 30px;
             }
-            
+
             td.line_content{
                 padding: 15px 5px;
                 height: auto;
@@ -166,7 +166,7 @@
                 border-right: 1px solid {{border}};
                 height: 520px;
             }
-            
+
             .columns_final{
                 position: absolute;
                 top:360px;
@@ -175,10 +175,15 @@
                 border-bottom: 1px solid {{border}};
                 height: 520px;
             }
+            .margin-fodec{
+                margin-top: 50px;
+            }
         </style>
-        
+
         <div id="logo">
-            <img src="{{server}}{{asset('files/Parametres/')}}{{config.logo}}">
+            {% if config.logo is not null %}
+                <img src="{{server}}{{asset('files/Parametres/')}}{{config.logo}}">
+            {% endif %}
         </div>
         <div id="coordonnees">
             <ul id="ul-coordonnees">
@@ -193,37 +198,37 @@
             <BR /><BR />
             {%if piece.tierMf != ""%}
                 <b>Matricule Fiscale :</b> {{piece.tierMf}}</b>
-            {%endif%}<br />
-            {%if piece.tierAdresse != ""%}
-        <b>Adresse : </b>{{piece.tierAdresse}}
+        {%endif%}<br />
+        {%if piece.tierAdresse != ""%}
+            <b>Adresse : </b>{{piece.tierAdresse}}
         {%endif%}
     </div>
     <table cellpadding="0" cellspacing="0" id="date-client-facture">
-            <tr>
-                <th class="titre-dcf">{{piece.type}} N°</th>
-                <td class="contenu-dcf">
-                    {%set prefix=''%}
-                    {%if piece.numero != ""%}
-                        {%for i in 0..(3-piece.numero|length)%}
-                            {%set prefix=prefix~'0'%}
-                        {%endfor%}
-                    {%endif%}
-                    {{prefix}}{{piece.numero}}/{%if piece.date%}{{piece.date|date('Y')}}{%endif%}
-                </td>
-            </tr>
-            <tr>
-                <th class="titre-dcf">Date</th>
-                <td class="contenu-dcf">
-                    {%if piece.date%}{{piece.date|date('d/m/Y')}}{%endif%}
-                </td>
-            </tr>
-            <tr>
-                <th class="titre-dcf">Client N°</th>
-                <td class="contenu-dcf">
-                    CL-0{{piece.tier.id}}
-                </td>
-            </tr>
-        </table>
+        <tr>
+            <th class="titre-dcf">{{piece.type}} N°</th>
+            <td class="contenu-dcf">
+                {%set prefix=''%}
+                {%if piece.numero != ""%}
+                    {%for i in 0..(3-piece.numero|length)%}
+                        {%set prefix=prefix~'0'%}
+                    {%endfor%}
+                {%endif%}
+                {{prefix}}{{piece.numero}}/{%if piece.date%}{{piece.date|date('Y')}}{%endif%}
+            </td>
+        </tr>
+        <tr>
+            <th class="titre-dcf">Date</th>
+            <td class="contenu-dcf">
+                {%if piece.date%}{{piece.date|date('d/m/Y')}}{%endif%}
+            </td>
+        </tr>
+        <tr>
+            <th class="titre-dcf">Client N°</th>
+            <td class="contenu-dcf">
+                CL-0{{piece.tier.id}}
+            </td>
+        </tr>
+    </table>
 
     <div id="typepiececommerciale">
         {{piece.type}}
@@ -246,7 +251,7 @@
             <td  class="ligne_header" style="width:80px; text-align:center;" >Code</td>
             <td class="ligne_header" style="text-align:left;">Désignation</td>
             <td class="ligne_header"  style="width:50px;  text-align:center;">Qté</td>
-            <td class="ligne_header" style="width:110px; text-align:right; ">Prix HT</td>
+            <td class="ligne_header" style="width:110px; text-align:right; padding-right: 25px;">Prix HT</td>
             <td class="ligne_header"  style="width:50px; text-align:center;">TVA(%)</td>
             <td class="ligne_header"  style="width:110px;text-align:right;">Total HT</td></tr>
             {%for ligne in piece.pieceLignes%}
@@ -254,13 +259,13 @@
                 <td class="line_content" valign="top" style="text-align:center;">{{ligne.code}}</td>
                 <td class="line_content" valign="top" style="text-align:left;">{{ligne.name|raw}}</td>
                 <td class="line_content" valign="top" style="text-align:center;">{{ligne.quantite}}</td>
-                <td class="line_content" valign="top" style="text-align:right;  padding-right: 10px;">{%if ligne.prixHt%}{{ligne.prixHt|number_format(3, '.', ' ')}}{%endif%}</td>
+                <td class="line_content" valign="top" style="text-align:right;  padding-right: 25px;">{%if ligne.prixHt%}{{ligne.prixHt|number_format(3, '.', ' ')}}{%endif%}</td>
                 <td class="line_content" valign="top" style="text-align:center;">{{ligne.tauxTva}}</td>
                 <td class="line_content" valign="top" style="text-align:right;  padding-right: 10px;">{%if ligne.totalHt%}{{ligne.totalHt|number_format(3, '.', ' ')}}{%endif%}</td>
             </tr>
         {%endfor%}
     </table>
-    
+
     <table cellpadding="0" cellspacing="0" id="totaux-base-tva">
         <tr>
             <td class="tva_porcentage">
@@ -284,13 +289,19 @@
             {%endif%}
         {%endfor%}
     </table>
-    
+
     <table cellpadding="0" cellspacing="0" id="totaux-generaux">
         <tr>
             <td class="libelle_total_droite">
                 Montant HT
             </td>
             <td class="donne_total_droite">{%if piece.montantHt%}{{piece.montantHt|number_format(3, '.', ' ')}} TND{%endif%}</td>
+        </tr>
+        <tr>
+            <td class="libelle_total_droite">
+                Montant FODEC
+            </td>
+            <td class="donne_total_droite">{%if piece.montantFodec%}{{piece.montantFodec|number_format(3, '.', ' ')}} TND{%endif%}</td>
         </tr>
         <tr>
             <td class="libelle_total_droite">
@@ -313,7 +324,7 @@
             </td>
         </tr>
     </table>
-    <div id="montant-en-toutes-lettre">
+    <div id="montant-en-toutes-lettre" class="margin-fodec">
         {%if piece.type == "Facture" %}
             Arrêtée la présente facture la somme de 
         {%elseif piece.type == "Devis" %}
@@ -323,17 +334,17 @@
         {%endif%}
         {{montant_en_toute_lettre}}
     </div>
-    <div id="cachet-signature">
+    <div id="cachet-signature" class="margin-fodec">
         Cachet & Signature
     </div>
-    
-    <div id="coordonnees-footer">
+
+    <div id="coordonnees-footer" class="margin-fodec">
         {%if config.mf != "" %}<b>Code TVA :</b> {{config.mf}} – {%endif%}
         {%if config.rc != "" %}<b>Registre de commerce :</b> {{config.rc}} – {%endif%}
         {%if config.cd != "" %}<b>Code en Douane :</b> {{config.cd}}{%endif%}
         <br />
         {%if config.adresse != "" %}<b>Adresse :</b> {{config.adresse}}{%endif%}
     </div>
-    
+
 </body>
 </html>

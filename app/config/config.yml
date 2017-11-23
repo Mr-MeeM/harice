@@ -139,9 +139,9 @@ ivory_ck_editor:
 knp_snappy:
     pdf:
         enabled:    true
-        binary:     /usr/bin/xvfb-run /usr/bin/wkhtmltopdf
-        options:    []
+        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+        options: []
     image:
         enabled:    true
-        binary:     /usr/bin/xvfb-run /usr/bin/wkhtmltoimage
+        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
         options:    []

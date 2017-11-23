@@ -139,6 +139,13 @@ class Config
      * @ORM\Column(name="couleur1", type="string", length=10, nullable=true)
      */
     private $couleur1;
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="fodec", type="float",  nullable=true)
+     */
+    private $fodec;
 
 
     /**
@@ -262,5 +269,317 @@ class Config
     public function getDroitTimbre()
     {
         return $this->droitTimbre;
+    }
+
+    /**
+     * Set tel
+     *
+     * @param string $tel
+     *
+     * @return Config
+     */
+    public function setTel($tel)
+    {
+        $this->tel = $tel;
+
+        return $this;
+    }
+
+    /**
+     * Get tel
+     *
+     * @return string
+     */
+    public function getTel()
+    {
+        return $this->tel;
+    }
+
+    /**
+     * Set fax
+     *
+     * @param string $fax
+     *
+     * @return Config
+     */
+    public function setFax($fax)
+    {
+        $this->fax = $fax;
+
+        return $this;
+    }
+
+    /**
+     * Get fax
+     *
+     * @return string
+     */
+    public function getFax()
+    {
+        return $this->fax;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return Config
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set web
+     *
+     * @param string $web
+     *
+     * @return Config
+     */
+    public function setWeb($web)
+    {
+        $this->web = $web;
+
+        return $this;
+    }
+
+    /**
+     * Get web
+     *
+     * @return string
+     */
+    public function getWeb()
+    {
+        return $this->web;
+    }
+
+    /**
+     * Set mf
+     *
+     * @param string $mf
+     *
+     * @return Config
+     */
+    public function setMf($mf)
+    {
+        $this->mf = $mf;
+
+        return $this;
+    }
+
+    /**
+     * Get mf
+     *
+     * @return string
+     */
+    public function getMf()
+    {
+        return $this->mf;
+    }
+
+    /**
+     * Set rc
+     *
+     * @param string $rc
+     *
+     * @return Config
+     */
+    public function setRc($rc)
+    {
+        $this->rc = $rc;
+
+        return $this;
+    }
+
+    /**
+     * Get rc
+     *
+     * @return string
+     */
+    public function getRc()
+    {
+        return $this->rc;
+    }
+
+    /**
+     * Set cd
+     *
+     * @param string $cd
+     *
+     * @return Config
+     */
+    public function setCd($cd)
+    {
+        $this->cd = $cd;
+
+        return $this;
+    }
+
+    /**
+     * Get cd
+     *
+     * @return string
+     */
+    public function getCd()
+    {
+        return $this->cd;
+    }
+
+    /**
+     * Set adresse
+     *
+     * @param string $adresse
+     *
+     * @return Config
+     */
+    public function setAdresse($adresse)
+    {
+        $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    /**
+     * Get adresse
+     *
+     * @return string
+     */
+    public function getAdresse()
+    {
+        return $this->adresse;
+    }
+
+    /**
+     * Set banque
+     *
+     * @param string $banque
+     *
+     * @return Config
+     */
+    public function setBanque($banque)
+    {
+        $this->banque = $banque;
+
+        return $this;
+    }
+
+    /**
+     * Get banque
+     *
+     * @return string
+     */
+    public function getBanque()
+    {
+        return $this->banque;
+    }
+
+    /**
+     * Set rib
+     *
+     * @param string $rib
+     *
+     * @return Config
+     */
+    public function setRib($rib)
+    {
+        $this->rib = $rib;
+
+        return $this;
+    }
+
+    /**
+     * Get rib
+     *
+     * @return string
+     */
+    public function getRib()
+    {
+        return $this->rib;
+    }
+
+    /**
+     * Set swift
+     *
+     * @param string $swift
+     *
+     * @return Config
+     */
+    public function setSwift($swift)
+    {
+        $this->swift = $swift;
+
+        return $this;
+    }
+
+    /**
+     * Get swift
+     *
+     * @return string
+     */
+    public function getSwift()
+    {
+        return $this->swift;
+    }
+
+    /**
+     * Set iban
+     *
+     * @param string $iban
+     *
+     * @return Config
+     */
+    public function setIban($iban)
+    {
+        $this->iban = $iban;
+
+        return $this;
+    }
+
+    /**
+     * Get iban
+     *
+     * @return string
+     */
+    public function getIban()
+    {
+        return $this->iban;
+    }
+
+    /**
+     * Set couleur1
+     *
+     * @param string $couleur1
+     *
+     * @return Config
+     */
+    public function setCouleur1($couleur1)
+    {
+        $this->couleur1 = $couleur1;
+
+        return $this;
+    }
+
+    /**
+     * Get couleur1
+     *
+     * @return string
+     */
+    public function getCouleur1()
+    {
+        return $this->couleur1;
     }
 }

@@ -70,6 +70,13 @@ class PieceLigne
      */
     private $totalHt;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="taux_fodec", type="float", nullable=true)
+     */
+    private $tauxFodec;
+
 
     /**
      * Get id
@@ -186,6 +193,7 @@ class PieceLigne
      */
     public function setTauxTva($tauxTva)
     {
+        
         $this->tauxTva = $tauxTva;
 
         return $this;
@@ -224,5 +232,47 @@ class PieceLigne
     {
         return $this->totalHt;
     }
-}
 
+    /**
+     * Set piece
+     *
+     * @param \Systeo\VenteBundle\Entity\Piece $piece
+     *
+     * @return PieceLigne
+     */
+    public function setPiece(\Systeo\VenteBundle\Entity\Piece $piece)
+    {
+        $this->piece = $piece;
+
+        return $this;
+    }
+
+    /**
+     * Get piece
+     *
+     * @return \Systeo\VenteBundle\Entity\Piece
+     */
+    public function getPiece()
+    {
+        return $this->piece;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function checkIfValid(){
+        if(
+                $this->getCode() != '' &&
+                $this->getName() != '' && 
+                $this->getPrixHt() != '' && 
+                $this->getQuantite() != '' && 
+                $this->getTauxTva() != '' &&
+                $this->getTotalHt() != '' 
+        ){
+            return true;
+        }
+        
+        return false;
+    }
+}

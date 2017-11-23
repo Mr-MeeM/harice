@@ -108,6 +108,13 @@ class ConfigType extends AbstractType
                     "required" => false,
                     'attr' => [
                         'autocomplete' => 'off']])
+                ->add('fodec', TextType::class, [
+                    "label" => "Fodec",
+                    "required" => false,
+                    'attr' => [
+                        'autocomplete' => 'Fodec',
+                        'placeholder' => 'Taux Fodec']])
+                
                 
                 ;
     }

@@ -132,6 +132,13 @@ class Piece
      */
     private $lignesAreValid;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="montant_fodec", type="decimal", precision=10, scale=3, nullable=true)
+     */
+    private $montantFodec;
+
 
     /**
      * Get id
@@ -615,5 +622,29 @@ class Piece
        
         
         
+    }
+
+    /**
+     * Set montantFodec
+     *
+     * @param string $montantFodec
+     *
+     * @return Piece
+     */
+    public function setMontantFodec($montantFodec)
+    {
+        $this->montantFodec = $montantFodec;
+
+        return $this;
+    }
+
+    /**
+     * Get montantFodec
+     *
+     * @return string
+     */
+    public function getMontantFodec()
+    {
+        return $this->montantFodec;
     }
 }
