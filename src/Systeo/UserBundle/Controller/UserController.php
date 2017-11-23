@@ -98,8 +98,15 @@ class UserController extends Controller {
         $this->createConf();
         $this->createCaisse();
         
+        $paths = [
+            '/files'=>is_writable($this->getParameter('hidden-files')),
+            '/web/files/Parametres'=>is_writable($this->getParameter('files').'/Parametres'),
+            '/web/tmp'=>is_writable($this->getParameter('tmp-files')),
+        ];
+        
+        
         return $this->render('SysteoUserBundle:user:verification.html.twig', array(
-            
+            'paths'=>$paths
         ));
     }
 
