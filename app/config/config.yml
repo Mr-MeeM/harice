@@ -133,15 +133,15 @@ ivory_ck_editor:
           
     toolbars:
         configs:
-            my_toolbar_1: [ [ 'Bold', 'Italic', 'Underline', 'Strike'],'-',['Undo','Redo' ] ,'-',['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],'-',['NumberedList','BulletedList','-','Outdent','Indent'],'-',['Link','Unlink'],'-',['Smiley']]
-            my_toolbar_2: [ [ 'Bold', 'Italic', 'Underline', 'Strike'],'-',['Undo','Redo' ] ,'-',['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],'-',['NumberedList','BulletedList','-','Outdent','Indent'],'-',['Link','Unlink'],'-',['Smiley']]
+            my_toolbar_1: "%ckeditor_toolbar_1%"
+            my_toolbar_2: "%ckeditor_toolbar_2%"
 
 knp_snappy:
     pdf:
         enabled:    true
-        binary:     /usr/bin/xvfb-run /usr/bin/wkhtmltopdf
+        binary:     "%wkhtmltopdf_commande%"
         options:    []
     image:
         enabled:    true
-        binary:     /usr/bin/xvfb-run /usr/bin/wkhtmltoimage
+        binary:     "%wkhtmltoimage_commande%"
         options:    []
