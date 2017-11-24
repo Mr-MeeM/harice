@@ -15,7 +15,7 @@
     width: 20px;
     height: 20px;
 }
-.total-tva-ligne, .total-ttc-ligne{
+.total-tva-ligne, .total-ttc-ligne, .total-fodec-ligne{
     display: none;
 }
 .icones-ligne{
