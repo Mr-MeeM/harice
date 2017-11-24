@@ -22,6 +22,7 @@ class PieceRepository extends \Doctrine\ORM\EntityRepository
        $this->searchName($queryBuilder,$data);
        $this->searchTier($queryBuilder,$data);
        $this->searchMontantHt($queryBuilder, $data);
+       $this->searchMontantFodec($queryBuilder, $data);
        $this->searchMontantTva($queryBuilder, $data);
        $this->searchMontantTtc($queryBuilder, $data);
        $this->searchSolde($queryBuilder, $data);
@@ -39,12 +40,13 @@ class PieceRepository extends \Doctrine\ORM\EntityRepository
         $querySum->leftJoin('a.tier', 'tier')
            ->addSelect('tier');
        
-       $querySum->select('SUM(a.solde) as SOLDE, SUM(a.montantHt) as HT,  SUM(a.montantTva) as TVA, SUM(a.montantTtc) as TTC');
+       $querySum->select('SUM(a.solde) as SOLDE, SUM(a.montantHt) as HT, SUM(a.montantFodec) as FODEC,  SUM(a.montantTva) as TVA, SUM(a.montantTtc) as TTC');
        
        $this->searchType($querySum,$data);
        $this->searchName($querySum,$data);
        $this->searchTier($querySum,$data);
        $this->searchMontantHt($querySum, $data);
+       $this->searchMontantFodec($querySum, $data);
        $this->searchMontantTva($querySum, $data);
        $this->searchMontantTtc($querySum, $data);
        $this->searchSolde($querySum, $data);
@@ -90,6 +92,20 @@ class PieceRepository extends \Doctrine\ORM\EntityRepository
            $qb->andWhere('tier.rs like :tier OR tier.firstName like :tier OR tier.lastName like :tier')
            
               ->setParameter('tier', '%'.$data['tier'].'%');
+       }
+   }
+   
+   
+   
+   /**
+    * 
+    * @param type $name
+    */
+   private function searchMontantFodec(QueryBuilder $qb, $data)
+   {
+       if(isset($data['montantFodec']) && !empty($data['montantFodec']) && isset($data['montantFodec_comparateur']) && !empty($data['montantFodec_comparateur'])){
+           $qb->andWhere('a.montantFodec '.$data['montantFodec_comparateur'].' :montantFodec')
+              ->setParameter('montantFodec', $data['montantFodec']);
        }
    }
    

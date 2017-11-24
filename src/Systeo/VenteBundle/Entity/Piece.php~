@@ -3,6 +3,8 @@
 namespace Systeo\VenteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Piece
@@ -26,6 +28,7 @@ class Piece
      *
      * @ORM\ManyToOne(targetEntity="Systeo\TierBundle\Entity\Tier")
      * @ORM\JoinColumn(nullable=true)
+     * @Assert\NotBlank(message="Vous devez sélectionner une tier!")
      */
     private $tier;
 
@@ -40,6 +43,7 @@ class Piece
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="date", nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
      */
     private $date;
 
@@ -47,6 +51,7 @@ class Piece
      * @var int
      *
      * @ORM\Column(name="numero", type="integer", nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
      */
     private $numero;
     
@@ -76,6 +81,7 @@ class Piece
      * @var string
      *
      * @ORM\Column(name="montant_ht", type="decimal", precision=10, scale=3, nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
      */
     private $montantHt;
 
@@ -83,6 +89,7 @@ class Piece
      * @var string
      *
      * @ORM\Column(name="montant_tva", type="decimal", precision=10, scale=3, nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
      */
     private $montantTva;
     
@@ -90,6 +97,7 @@ class Piece
      * @var string
      *
      * @ORM\Column(name="montant_timbre", type="decimal", precision=10, scale=3, nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
      */
     private $montantTimbre;
 
@@ -97,6 +105,7 @@ class Piece
      * @var string
      *
      * @ORM\Column(name="montant_ttc", type="decimal", precision=10, scale=3, nullable=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire!")
      */
     private $montantTtc;
     
@@ -120,9 +129,15 @@ class Piece
     /**
      * @var bool
      *
-     * @ORM\Column(name="lignes_ara_valid", type="boolean")
      */
     private $lignesAreValid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="montant_fodec", type="decimal", precision=10, scale=3, nullable=true)
+     */
+    private $montantFodec;
 
 
     /**
@@ -561,4 +576,51 @@ class Piece
     }
     
    
+
+    /**
+     * Set lignesAreValid
+     *
+     * @param boolean $lignesAreValid
+     *
+     * @return Piece
+     */
+    public function setLignesAreValid($lignesAreValid)
+    {
+        $this->lignesAreValid = $lignesAreValid;
+
+        return $this;
+    }
+
+    /**
+     * Get lignesAreValid
+     *
+     * @return boolean
+     */
+    public function getLignesAreValid()
+    {
+        foreach($this->getPieceLignes() as $ligne){
+            if(!$ligne->checkIfValid()){
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        // check if the name is actually a fake name
+        if (!$this->getLignesAreValid()) {
+            $context->buildViolation('Tous les champs de toutes les lignes doivent être valides!')
+                ->atPath('lignesAreValid')
+                ->addViolation();
+        }
+        
+       
+        
+        
+    }
 }

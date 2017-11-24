@@ -83,9 +83,11 @@
                         </td>
                         <td>{{form_widget(ligne.prixHt)}}</td>
                         <td>{{form_widget(ligne.quantite)}}</td>
-                        <td>{{form_widget(ligne.tauxTva,{'attr':{'class':'tva-ligne'}})}}</td>
+                        <td>{{form_widget(ligne.tauxTva,{'attr':{'class':'tva-ligne'}})}}
+                        {{form_widget(ligne.tauxFodec,{'attr':{'value':tauxFodec,'class':'fodec-ligne'}})}}</td>
                         <td>
                             {{form_widget(ligne.totalHt)}}
+                            <span class="total-fodec-ligne"></span>
                             <span class="total-tva-ligne"></span>
                             <span class="total-ttc-ligne"></span>
                         </td>
@@ -130,9 +132,12 @@
                 </td>
                 <td>{{ form_widget(form.pieceLignes.vars.prototype.prixHt)|e }}</td>
                 <td>{{ form_widget(form.pieceLignes.vars.prototype.quantite)|e }}</td>
-                <td>{{ form_widget(form.pieceLignes.vars.prototype.tauxTva,{'attr':{'class':'tva-ligne'}})|e }}</td>
+                <td>{{ form_widget(form.pieceLignes.vars.prototype.tauxTva,{'attr':{'class':'tva-ligne'}})|e }}
+                    {{ form_widget(form.pieceLignes.vars.prototype.tauxFodec,{'attr':{'value':tauxFodec,'class':'fodec-ligne'}})|e}}</td>
                 <td>
                     {{ form_widget(form.pieceLignes.vars.prototype.totalHt)|e }}
+                    
+                    <span class="total-fodec-ligne"></span>
                     <span class="total-tva-ligne"></span>
                     <span class="total-ttc-ligne"></span>
                 </td>
@@ -153,6 +158,12 @@
                         <th>Total HT</th>
                         <td>{{form_row(form.montantHt)}}</td>
                     </tr>
+                    {% if (tauxFodec == 1) %}
+                    <tr>
+                        <th>Total Fodec</th>
+                        <td>{{form_row(form.montantFodec)}}</td>
+                    </tr>
+                    {% endif %}
                     <tr>
                         <th>Total TVA</th>
                         <td>{{form_row(form.montantTva)}}</td>

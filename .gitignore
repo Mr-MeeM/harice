@@ -1,0 +1,8 @@
+/nbproject/private/
+/vendor/
+/var/cache
+/var/cache/*
+/var/logs
+/var/logs/*
+/web/bundles
+/web/bundles/*

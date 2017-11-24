@@ -139,6 +139,13 @@ class Config
      * @ORM\Column(name="couleur1", type="string", length=10, nullable=true)
      */
     private $couleur1;
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="fodec", type="float", nullable=true)
+     */
+    private $fodec;
 
 
     /**
@@ -574,5 +581,29 @@ class Config
     public function getCouleur1()
     {
         return $this->couleur1;
+    }
+
+    /**
+     * Set fodec
+     *
+     * @param float $fodec
+     *
+     * @return Config
+     */
+    public function setFodec($fodec)
+    {
+        $this->fodec = $fodec;
+
+        return $this;
+    }
+
+    /**
+     * Get fodec
+     *
+     * @return float
+     */
+    public function getFodec()
+    {
+        return $this->fodec;
     }
 }

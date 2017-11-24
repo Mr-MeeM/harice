@@ -40,7 +40,10 @@ class PieceController extends Controller {
 
 
 
+        
         $em = $this->getDoctrine()->getManager();
+        $conf = $em->getRepository('SysteoConfigBundle:Config')->findOneById(1);
+        
 
         $paginator = $this->get('knp_paginator');
 
@@ -53,6 +56,7 @@ class PieceController extends Controller {
         return $this->render('SysteoVenteBundle:piece:index.html.twig', array(
                     'pieces' => $pieces,
                     'totaux' => $totaux,
+                    'tauxFodec' => $conf->getFodec(),
         ));
     }
 
@@ -132,6 +136,7 @@ class PieceController extends Controller {
                     'numero' => $this->getLastNumero($type),
                     'tier' => $this->getTier($request),
                     'timbre' => $conf->getDroitTimbre(),
+                    'tauxFodec' => $conf->getFodec(),
                     'ckeditor' => $ckeditor->createView()
         ));
     }
@@ -142,35 +147,46 @@ class PieceController extends Controller {
      * Finds and displays a piece entity.
      *
      * @Route("/{id}/imprimer", name="piece_imprimer_one")
-     * @Security("has_role('ROLE_USER')")
      */
     public function imprimerOne1Action(Piece $piece) {
-        $base_tva = [];
-
-        $em = $this->getDoctrine()->getManager();
-
-        foreach ($piece->getPieceLignes() as $ligne):
-            if (!array_key_exists($ligne->getTauxTva(), $base_tva)) {
-                $base_tva[$ligne->getTauxTva()] = $ligne->getTotalHt() * $ligne->getTauxTva() / 100;
-            } else {
-                $base_tva[$ligne->getTauxTva()] = $base_tva[$ligne->getTauxTva()] + $ligne->getTotalHt() * $ligne->getTauxTva() / 100;
-            }
-        endforeach;
-
-        $html = $this->renderView('SysteoVenteBundle:piece:imprimer.html.twig', array(
-            'piece' => $piece,
-            'base_tva' => $base_tva,
-            'montant_en_toute_lettre' => $this->getMontantEnTouteLettre($piece->getMontantTtc()),
-            'config' => $em->getRepository('SysteoConfigBundle:Config')->findOneById(1),
-            'server'=>$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
-        ));
-
-        return new Response(
-                $this->get('knp_snappy.pdf')->getOutputFromHtml($html), 200, array(
+//        $base_tva = [];
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        foreach ($piece->getPieceLignes() as $ligne):
+//            if (!array_key_exists($ligne->getTauxTva(), $base_tva)) {
+//                $base_tva[$ligne->getTauxTva()] = $ligne->getTotalHt() * $ligne->getTauxTva() / 100;
+//            } else {
+//                $base_tva[$ligne->getTauxTva()] = $base_tva[$ligne->getTauxTva()] + $ligne->getTotalHt() * $ligne->getTauxTva() / 100;
+//            }
+//        endforeach;
+//
+//        $html = $this->renderView('SysteoVenteBundle:piece:imprimer.html.twig', array(
+//            'piece' => $piece,
+//            'base_tva' => $base_tva,
+//            'montant_en_toute_lettre' => $this->getMontantEnTouteLettre($piece->getMontantTtc()),
+//            'config' => $em->getRepository('SysteoConfigBundle:Config')->findOneById(1),
+//            'server'=>$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
+//        ));
+//
+//        return new Response(
+//                $this->get('knp_snappy.pdf')->getOutputFromHtml($html), 200, array(
+//            'Content-Type' => 'application/pdf',
+//            'Content-Disposition' => 'inline; filename="'.$piece->getType().'-'.$piece->getNumero().'.pdf"'
+//                )
+//        );
+      
+        $snappy=$this->get('knp_snappy.pdf');
+        $fileName="first_pdf";
+        $webSiteUrl=" http://127.0.0.1/harice/web/app_dev.php/piece/1";
+        
+        return new Response($snappy->getOutputFromHtml($webSiteUrl),
+                200,
+                array(
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$piece->getType().'-'.$piece->getNumero().'.pdf"'
+            'Content-Disposition' => 'inline; filename="'.$fileName.'.pdf"'
                 )
-        );
+                );
     }
 
     /**
@@ -194,10 +210,14 @@ class PieceController extends Controller {
             }
         endforeach;
 
+        $em = $this->getDoctrine()->getManager();
+        $conf = $em->getRepository('SysteoConfigBundle:Config')->findOneById(1);
+        
         return $this->render('SysteoVenteBundle:piece:show.html.twig', array(
                     'piece' => $piece,
                     'delete_form' => $deleteForm->createView(),
-                    'base_tva' => $base_tva
+                    'base_tva' => $base_tva,
+                    'tauxFodec' => $conf->getFodec(),
         ));
     }
 
@@ -256,6 +276,7 @@ class PieceController extends Controller {
                     'numero' => $this->getLastNumero($piece->getType()),
                     'tier' => $this->getTier($request),
                     'timbre' => $conf->getDroitTimbre(),
+                    'tauxFodec' => $conf->getFodec(),
                     'ckeditor' => $ckeditor->createView()
         ));
     }
@@ -357,6 +378,14 @@ class PieceController extends Controller {
             }
             if ($this->checkField($data, 'date_fin')) {
                 $url['date_fin'] = $this->getDate($data['date_fin']);
+            }
+            
+
+            if ($this->checkField($data, 'montantFodec')) {
+                $url['montantFodec'] = $data['montantFodec'];
+                if ($this->checkField($data, 'montantFodec_comparateur')) {
+                    $url['montantFodec_comparateur'] = $data['montantFodec_comparateur'];
+                }
             }
         }
 
