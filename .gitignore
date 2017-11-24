@@ -6,5 +6,6 @@ composer.lock
 /files/
 /web/files/
 /web/mp/
+/tests/
 
 
