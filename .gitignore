@@ -1,8 +1,10 @@
-/nbproject/private/
+/app/config/parameters.yml
+composer.lock
+/nbproject/
 /vendor/
-/var/cache
-/var/cache/*
-/var/logs
-/var/logs/*
-/web/bundles
-/web/bundles/*
+/var/
+/files/
+/web/files/
+/web/mp/
+
+
