@@ -10,3 +10,7 @@ parameters:
     mailer_user: null
     mailer_password: null
     secret: ThisTokenIsNotSoSecretChangeIt
+    wkhtmltopdf_commande: /usr/bin/xvfb-run /usr/bin/wkhtmltopdf
+    wkhtmltoimage_commande: /usr/bin/xvfb-run /usr/bin/wkhtmltoimage
+    ckeditor_toolbar_1: [ [ 'Bold', 'Italic', 'Underline', 'Strike'],'-',['Undo','Redo' ] ,'-',['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],'-',['NumberedList','BulletedList','-','Outdent','Indent'],'-',['Link','Unlink'],'-',['Smiley']]
+    ckeditor_toolbar_2: [ [ 'Bold', 'Italic', 'Underline', 'Strike'],'-',['Undo','Redo' ] ,'-',['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],'-',['NumberedList','BulletedList','-','Outdent','Indent'],'-',['Link','Unlink'],'-',['Smiley']]

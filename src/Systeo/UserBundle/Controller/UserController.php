@@ -95,9 +95,18 @@ class UserController extends Controller {
     public function verification(){
         
         $this->createAdmin();
+        $this->createConf();
+        $this->createCaisse();
+        
+        $paths = [
+            '/files'=>is_writable($this->getParameter('hidden-files')),
+            '/web/files/Parametres'=>is_writable($this->getParameter('files').'/Parametres'),
+            '/web/tmp'=>is_writable($this->getParameter('tmp-files')),
+        ];
+        
         
         return $this->render('SysteoUserBundle:user:verification.html.twig', array(
-            
+            'paths'=>$paths
         ));
     }
 
@@ -212,7 +221,10 @@ class UserController extends Controller {
     }
     
     
-    
+    /**
+     * 
+     * @return type
+     */
     private function createAdmin(){
         $em = $this->getDoctrine()->getManager();
         
@@ -231,6 +243,56 @@ class UserController extends Controller {
         $user->setRoles(['Admin'=>'ROLE_ADMIN']);
         
         $em->persist($user);
+        $em->flush();
+        
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    private function createConf(){
+        $em = $this->getDoctrine()->getManager();
+        
+        if(count($em->getRepository('SysteoConfigBundle:Config')->findAll())){
+            return;
+        }
+        
+        $config = new \Systeo\ConfigBundle\Entity\Config();
+        
+        $config->setAdresse('Rte de Tunis Km 10');
+        $config->setCompanyName('SYSTEO');
+        $config->setCouleur1('#FF0000');
+        $config->setDroitTimbre(0.5);
+        $config->setEmail("contact@systeo.biz");
+        $config->setFax('00216 74 400 080');
+        $config->setTauxTva('6;18');
+        $config->setTel('00216 74 415 649');
+        $config->setWeb('www.systeo.biz');
+        
+        $em->persist($config);
+        $em->flush();
+        
+    }
+    
+     /**
+     * 
+     * @return type
+     */
+    private function createCaisse(){
+        $em = $this->getDoctrine()->getManager();
+        
+        if(count($em->getRepository('SysteoBanqueBundle:BanqueCompte')->findAll())){
+            return;
+        }
+        
+        $compte = new \Systeo\BanqueBundle\Entity\BanqueCompte();
+        
+        $compte->setBanque('Caisse');
+        $compte->setName('Caisse');
+        $compte->setRib('01');
+        
+        $em->persist($compte);
         $em->flush();
         
     }

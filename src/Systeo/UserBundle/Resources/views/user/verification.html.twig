@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}HARICE :: حريص{% endblock %}</title>
+    {% block balises %}
+        <meta name="viewport" content="width=device-width"/>
+    {% endblock %}
+    {% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+    {% endblock %}
+  </head>
+  <body>
+      
+    <div class="container-fluid">
+        
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <h2>Vérification des dossiers</h2>
+            </div>
+        </div>
+        {%set i = 0%}
+        {%for key,path in paths%}
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                {%if path%}
+                    {%set i = i + 1%}
+                    <div class="alert alert-success">
+                        {{key}} : writable
+                    </div>
+                {%else%}
+                    <div class="alert alert-danger">
+                        {{key}} : unwritable
+                    </div>
+                {%endif%}
+            </div>
+        </div>
+        {%endfor%}
+        {%if i == 3%}
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <div class="alert alert-info">
+                    <p>Rendez vous à la page <b><a href='{{path('login')}}'>d'authentification</a></b>.<p>
+                    <ul>
+                        <li><b>Identifiant : </b> admin</li>
+                        <li><b>Mot de passe : </b> admin</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {%endif%}
+    </div>
+    
+  </body>
+</html>
