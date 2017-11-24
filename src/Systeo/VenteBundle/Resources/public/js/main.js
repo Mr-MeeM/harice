@@ -178,6 +178,7 @@ function calculerTotalGeneral(){
     var total_ht = 0;
     var total_tva = 0;
     var total_ttc = 0;
+    var total_fodec = 0;
     
     $('.total-ht-ligne').each(function(){
         total_ht = total_ht + parseFloat($(this).val());
@@ -189,6 +190,10 @@ function calculerTotalGeneral(){
     
     $('.total-ttc-ligne').each(function(){
         total_ttc = total_ttc + parseFloat($(this).text());
+    });
+    
+    $('.total-fodec-ligne').each(function(){
+        total_fodec = total_fodec + parseFloat($(this).text());
     });
     
     
@@ -204,9 +209,15 @@ function calculerTotalGeneral(){
         $('#systeo_ventebundle_piece_montantTva').val(empty_flied);
     }
     
+    if(!isNaN(total_fodec)){
+        $('#systeo_ventebundle_piece_montantFodec').val(total_fodec.toFixed(decimal));
+    }else{
+        $('#systeo_ventebundle_piece_montantFodec').val(empty_flied);
+    }
+    
     if(!isNaN(total_ht) && !isNaN(total_tva)){
         
-        total_ttc = total_ht + total_tva + parseFloat($('#systeo_ventebundle_piece_montantTimbre').val());
+        total_ttc = total_ht +total_fodec + total_tva + parseFloat($('#systeo_ventebundle_piece_montantTimbre').val());
         $('#systeo_ventebundle_piece_montantTtc').val(total_ttc.toFixed(decimal));
     }else{
         $('#systeo_ventebundle_piece_montantTtc').val(empty_flied);
@@ -218,23 +229,35 @@ function caculerTotalLigne(tr){
     var prix = tr.children('td').children('.prix-ht-ligne').val();
     var qte = tr.children('td').children('.quantite-ligne').val();
     var taux_tva = tr.children('td').children('.tva-ligne').val();
-    var total_ht =0; var total_tva =0; var total_ttc =0; 
+    var taux_fodec = tr.children('td').children('.fodec-ligne').val();
+    
+    var total_ht =0; 
+    var total_tva =0; 
+    var total_ttc =0; 
+    var total_fodec =0; 
     
     if(taux_tva === ""){
         taux_tva = 0;
+    }
+    if(taux_fodec === ""){
+        taux_fodec = 0;
     }
    
     tr.children('td').children('.total-ttc-ligne').text(total_ttc);
     
     if(!isNaN(qte) && !isNaN(prix)){
         total_ht = qte * prix;
-        total_tva = total_ht * taux_tva / 100;
-        total_ttc = total_ht + total_tva;
+        
+        total_fodec=total_ht*taux_fodec/100;
+        total_tva = (total_ht+total_fodec) * taux_tva / 100;
+        total_ttc = total_ht+total_fodec + total_tva;
+        
     }
     
     tr.children('td').children('.total-ht-ligne').val(total_ht.toFixed(decimal));
     tr.children('td').children('.total-tva-ligne').text(total_tva.toFixed(decimal));
     tr.children('td').children('.total-ttc-ligne').text(total_ttc.toFixed(decimal));
+    tr.children('td').children('.total-fodec-ligne').text(total_fodec.toFixed(decimal));
     
     calculerTotalGeneral();
 }
