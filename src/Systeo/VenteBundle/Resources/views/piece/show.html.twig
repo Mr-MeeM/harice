@@ -118,7 +118,7 @@
                     <th>Total HT</th>
                     <td class="text-right" nowrap>{%if piece.montantHt%}{{piece.montantHt|number_format(3, '.', ' ')}}{%endif%}</td>
                 </tr>
-                {% if (tauxFodec == 1) %}
+                {% if tauxFodec is not null %}
                 <tr>
                     <th>Total Fodec</th>
                     <td class="text-right" nowrap>{%if piece.montantFodec%}{{piece.montantFodec|number_format(3, '.', ' ')}}{%endif%}</td>

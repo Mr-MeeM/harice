@@ -158,12 +158,10 @@
                         <th>Total HT</th>
                         <td>{{form_row(form.montantHt)}}</td>
                     </tr>
-                    {% if (tauxFodec == 1) %}
-                    <tr>
+                    <tr {% if tauxFodec is null %}style="display:none"{% endif %}>
                         <th>Total Fodec</th>
                         <td>{{form_row(form.montantFodec)}}</td>
                     </tr>
-                    {% endif %}
                     <tr>
                         <th>Total TVA</th>
                         <td>{{form_row(form.montantTva)}}</td>

@@ -56,7 +56,7 @@
             <option {%if app.request.get('montantHt_comparateur') == "<"%}selected{%endif%} value='<'><</option>
         </select>
     </div>
-
+    {% if tauxFodec is not null %}
     <div class='col-lg-2'>
         <input name='piece_search[montantFodec]'  placeholder='montant Fodec'  class='form-control' value='{{app.request.get('montantFodec')}}'>      
     </div>
@@ -69,7 +69,7 @@
             <option {%if app.request.get('montantFodec_comparateur') == "<"%}selected{%endif%} value='<'><</option>
         </select>
     </div>
-        
+    {%endif%}    
         <div class='col-lg-2'>
         <input name='piece_search[montantTva]'  placeholder='montant TVA'  class='form-control' value='{{app.request.get('montantTva')}}'>      
     </div>
@@ -127,7 +127,7 @@
             <th>Tier</th>
             <th>Date</th>
             <th class="text-right">Montant HT</th>                
-                {% if (tauxFodec == 1) %}
+                {% if tauxFodec is not null %}
                 <th class="text-right">Montant FODEC</th>
                 {% endif %}
             <th class="text-right">Montant TVA</th>
@@ -143,7 +143,7 @@
                 <td>{%if piece.tier%}<a href="{{path('tier_show',{'id':piece.tier.id})}}">{{piece.tier.name}}</a>{%endif%}</td>
                 <td>{%if piece.date%}{{piece.date|date('d/m/Y')}}{%endif%}</td>
                 <td class='text-right' nowrap>{%if piece.montantHt%}{{piece.montantHt|number_format(3, '.', ' ')}}{%endif%}</td>                
-                {% if (tauxFodec == 1) %}
+                {% if tauxFodec is not null %}
                     <td class='text-right' nowrap>{%if piece.montantFodec%}{{piece.montantFodec|number_format(3, '.', ' ')}}{%endif%}</td>
                 {%endif%}
                 <td class='text-right' nowrap>{%if piece.montantTva%}{{piece.montantTva|number_format(3, '.', ' ')}}{%endif%}</td>
@@ -173,7 +173,7 @@
                         <tr>
                             <td colspan='3'></td>
                             <td class='text-right' nowrap><b>{{totaux['HT']|number_format(3, '.', ' ')}}</b></td>                
-                                    {% if (tauxFodec == 1) %}
+                                    {% if tauxFodec is not null %}
                                 <td class='text-right' nowrap><b>{{totaux['FODEC']|number_format(3, '.', ' ')}}</b></td>
                                     {%endif%}
                             <td class='text-right' nowrap><b>{{totaux['TVA']|number_format(3, '.', ' ')}}</b></td>

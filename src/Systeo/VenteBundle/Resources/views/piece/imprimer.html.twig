@@ -297,12 +297,14 @@
             </td>
             <td class="donne_total_droite">{%if piece.montantHt%}{{piece.montantHt|number_format(3, '.', ' ')}} TND{%endif%}</td>
         </tr>
+        {% if tauxFodec is not null %}
         <tr>
             <td class="libelle_total_droite">
                 Montant FODEC
             </td>
             <td class="donne_total_droite">{%if piece.montantFodec%}{{piece.montantFodec|number_format(3, '.', ' ')}} TND{%endif%}</td>
         </tr>
+        {%endif%}
         <tr>
             <td class="libelle_total_droite">
                 Total TVA

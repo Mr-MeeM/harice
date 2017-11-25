@@ -152,6 +152,7 @@ class PieceController extends Controller {
         $base_tva = [];
 
         $em = $this->getDoctrine()->getManager();
+        $conf = $em->getRepository('SysteoConfigBundle:Config')->findOneById(1);
 
         foreach ($piece->getPieceLignes() as $ligne):
             if (!array_key_exists($ligne->getTauxTva(), $base_tva)) {
@@ -164,6 +165,7 @@ class PieceController extends Controller {
         $html = $this->renderView('SysteoVenteBundle:piece:imprimer.html.twig', array(
             'piece' => $piece,
             'base_tva' => $base_tva,
+            'tauxFodec' => $conf->getFodec(),
             'montant_en_toute_lettre' => $this->getMontantEnTouteLettre($piece->getMontantTtc()),
             'config' => $em->getRepository('SysteoConfigBundle:Config')->findOneById(1),
             'server'=>$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
