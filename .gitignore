@@ -7,4 +7,5 @@ composer.lock
 /web/files/
 /web/mp/
 /tests/
+.htaccess
 
