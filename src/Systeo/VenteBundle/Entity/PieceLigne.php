@@ -267,7 +267,7 @@ class PieceLigne
                 $this->getName() != '' && 
                 $this->getPrixHt() != '' && 
                 $this->getQuantite() != '' && 
-                $this->getTauxTva() != '' &&
+                $this->getTauxTva() !== '' &&
                 $this->getTotalHt() != '' 
         ){
             return true;
