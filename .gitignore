@@ -4,6 +4,7 @@ composer.lock
 /vendor/
 /var/
 /files/
+/web/bundles/
 /web/files/
 /web/mp/
 /tests/

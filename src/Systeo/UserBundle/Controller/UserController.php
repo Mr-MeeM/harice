@@ -266,7 +266,7 @@ class UserController extends Controller {
         $config->setDroitTimbre(0.5);
         $config->setEmail("contact@systeo.biz");
         $config->setFax('00216 74 400 080');
-        $config->setTauxTva('6;18');
+        $config->setTauxTva('0;6;18');
         $config->setTel('00216 74 415 649');
         $config->setWeb('www.systeo.biz');
         
