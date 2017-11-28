@@ -17,3 +17,7 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+    wkhtmltopdf_commande: wkhtmltopdf
+    wkhtmltoimage_commande: wkhtmltoimage
+    ckeditor_toolbar_1: [ [ 'Bold', 'Italic', 'Underline', 'Strike'],'-',['Undo','Redo' ] ,'-',['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],'-',['NumberedList','BulletedList','-','Outdent','Indent'],'-',['Link','Unlink'],'-',['Smiley']]
+    ckeditor_toolbar_2: [ [ 'Bold', 'Italic', 'Underline', 'Strike'],'-',['Undo','Redo' ] ,'-',['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],'-',['NumberedList','BulletedList','-','Outdent','Indent'],'-',['Link','Unlink'],'-',['Smiley']]
