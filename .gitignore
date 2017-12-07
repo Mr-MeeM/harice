@@ -6,6 +6,7 @@ composer.lock
 /files/
 /web/bundles/
 /web/files/
+/web/bundles/
 /web/mp/
 /tests/
 .htaccess
