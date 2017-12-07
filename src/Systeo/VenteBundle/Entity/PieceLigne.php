@@ -45,7 +45,7 @@ class PieceLigne
     /**
      * @var int
      *
-     * @ORM\Column(name="quantite", type="integer")
+     * @ORM\Column(name="quantite", type="float")
      */
     private $quantite;
 
@@ -153,7 +153,7 @@ class PieceLigne
     /**
      * Get quantite
      *
-     * @return int
+     * @return float
      */
     public function getQuantite()
     {
