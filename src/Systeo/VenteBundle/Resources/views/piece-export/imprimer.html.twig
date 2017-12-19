@@ -31,6 +31,7 @@
                 list-style: none;
                 margin: 0px;
                 padding: 0px;
+                height: 100px;
             }
             #client-name{
                 position: absolute;
@@ -172,7 +173,7 @@
         </div>
         <div id="coordonnees">
             <ul id="ul-coordonnees">
-                {%if config.tel != ""%}<li><span class="coordonnees">Tél :</span> {{config.tel}}<br /></li>{%endif%}
+                {%if config.tel != ""%}<span class="coordonnees">Tél :</span> {{config.tel}}<br /></li>{%endif%}
                 {%if config.fax != ""%}<li><span class="coordonnees">Fax :</span> {{config.fax}}<br /></li>{%endif%}
                 {%if config.email != ""%}<li><span class="coordonnees">Email :</span> {{config.email}}</li>{%endif%}
                 {%if config.web != ""%}<li><span class="coordonnees">Site web :</span> {{config.web}}</li>{%endif%}
