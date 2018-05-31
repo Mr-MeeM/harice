@@ -40,10 +40,10 @@ class PieceController extends Controller {
 
 
 
-        
+
         $em = $this->getDoctrine()->getManager();
         $conf = $em->getRepository('SysteoConfigBundle:Config')->findOneById(1);
-        
+
 
         $paginator = $this->get('knp_paginator');
 
@@ -89,7 +89,6 @@ class PieceController extends Controller {
                     'piece_export_id' => $piece_export_id
         ));
     }
-    
 
     /**
      * Creates a new piece entity.
@@ -113,7 +112,7 @@ class PieceController extends Controller {
         ]);
 
         $ckeditor = $this->createForm('Systeo\VenteBundle\Form\DesignationType');
-        
+
         $form->handleRequest($request);
 
         $type = $this->getPieceType($request);
@@ -141,7 +140,45 @@ class PieceController extends Controller {
         ));
     }
 
-  
+    /**
+     * Finds and displays a piece entity.
+     *
+     * @Route("/{id}/html2pdf", name="html2pdf")
+     */
+    public function imprimerAction(Piece $piece) {
+        $base_tva = [];
+
+        $em = $this->getDoctrine()->getManager();
+        $conf = $em->getRepository('SysteoConfigBundle:Config')->findOneById(1);
+
+        foreach ($piece->getPieceLignes() as $ligne):
+            if (!array_key_exists($ligne->getTauxTva(), $base_tva)) {
+                $base_tva[$ligne->getTauxTva()] = $ligne->getTotalHt() * $ligne->getTauxTva() / 100;
+            } else {
+                $base_tva[$ligne->getTauxTva()] = $base_tva[$ligne->getTauxTva()] + $ligne->getTotalHt() * $ligne->getTauxTva() / 100;
+            }
+        endforeach;
+
+        $html = $this->renderView('SysteoVenteBundle:piece:imprimer.html.twig', array(
+            'piece' => $piece,
+            'base_tva' => $base_tva,
+            'tauxFodec' => $conf->getFodec(),
+            'montant_en_toute_lettre' => $this->getMontantEnTouteLettre($piece->getMontantTtc()),
+            'config' => $em->getRepository('SysteoConfigBundle:Config')->findOneById(1),
+            'server' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']
+        ));
+
+//on appelle le service html2pdf
+        $html2pdf = $this->get('html2pdf_factory')->create('P', 'A4', 'fr', true, 'UTF-8');
+//real : utilise la taille réelle
+        $html2pdf->pdf->SetDisplayMode('real');
+//writeHTML va tout simplement prendre la vue stocker dans la variable $html pour la convertir en format PDF
+        $html2pdf->writeHTML($html);
+//Output envoit le document PDF au navigateur internet
+        return new Response(
+                $html2pdf->Output('liste_véhicule.pdf'), 150, array('Content-Type' => 'application/pdf')
+        );
+    }
 
     /**
      * Finds and displays a piece entity.
@@ -162,19 +199,19 @@ class PieceController extends Controller {
             }
         endforeach;
 
-        $html = $this->renderView('SysteoVenteBundle:piece:imprimer.html.twig', array(
+        $html = $this->renderView('SysteoVenteBundle:piece:imprimer1.html.twig', array(
             'piece' => $piece,
             'base_tva' => $base_tva,
             'tauxFodec' => $conf->getFodec(),
             'montant_en_toute_lettre' => $this->getMontantEnTouteLettre($piece->getMontantTtc()),
             'config' => $em->getRepository('SysteoConfigBundle:Config')->findOneById(1),
-            'server'=>$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
+            'server' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']
         ));
 
         return new Response(
                 $this->get('knp_snappy.pdf')->getOutputFromHtml($html), 200, array(
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$piece->getType().'-'.$piece->getNumero().'.pdf"'
+            'Content-Disposition' => 'inline; filename="' . $piece->getType() . '-' . $piece->getNumero() . '.pdf"'
                 )
         );
     }
@@ -202,7 +239,7 @@ class PieceController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $conf = $em->getRepository('SysteoConfigBundle:Config')->findOneById(1);
-        
+
         return $this->render('SysteoVenteBundle:piece:show.html.twig', array(
                     'piece' => $piece,
                     'delete_form' => $deleteForm->createView(),
@@ -249,7 +286,7 @@ class PieceController extends Controller {
                     $em->remove($ligne);
                 }
             }
-            
+
             $piece->setSolde($piece->getCalculatedSolde());
 
             $em->persist($piece);
@@ -285,13 +322,13 @@ class PieceController extends Controller {
         if ($form->isSubmitted() && $form->isValid()) {
 
             $type = $piece->getType();
-            
+
             $piece_id = $piece->getId();
-            
+
             $em = $this->getDoctrine()->getManager();
-            
-            $em->getRepository('SysteoReglementBundle:Reglement')->removeRelatedEntity('piece',$piece_id); 
-            
+
+            $em->getRepository('SysteoReglementBundle:Reglement')->removeRelatedEntity('piece', $piece_id);
+
             $em->remove($piece);
             $em->flush();
 
@@ -355,7 +392,7 @@ class PieceController extends Controller {
                     $url['montantTtc_comparateur'] = $data['montantTtc_comparateur'];
                 }
             }
-            
+
             if ($this->checkField($data, 'solde')) {
                 $url['solde'] = $data['solde'];
                 if ($this->checkField($data, 'solde_comparateur')) {
@@ -369,7 +406,7 @@ class PieceController extends Controller {
             if ($this->checkField($data, 'date_fin')) {
                 $url['date_fin'] = $this->getDate($data['date_fin']);
             }
-            
+
 
             if ($this->checkField($data, 'montantFodec')) {
                 $url['montantFodec'] = $data['montantFodec'];
@@ -383,7 +420,7 @@ class PieceController extends Controller {
     }
 
     private function checkField($data, $field) {
-        if (isset($data[$field]) && $data[$field]!=="") {
+        if (isset($data[$field]) && $data[$field] !== "") {
             return true;
         }
         return false;

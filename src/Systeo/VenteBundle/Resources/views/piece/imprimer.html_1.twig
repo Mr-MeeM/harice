@@ -1,0 +1,348 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+
+    </head>
+    <body>
+        <style>
+            {%set color= config.couleur1 %}
+            {%set border="#666"%}
+            body, td, p{
+
+                font-size: 16px;
+            }
+            #logo{
+                position: absolute;
+                top:40px;
+                left:10px;
+            }
+            #logo img{
+                max-height: 100px;
+                width: auto;
+                max-width: 250px;
+                height: auto;
+            }
+            #coordonnees{
+                position: absolute;
+                top:10px;
+                left:440px;
+            }
+            #ul-coordonnees{
+                list-style: none;
+                margin: 0px;
+                padding: 0px;
+            }
+            #client-name{
+                position: absolute;
+                top: 150px;
+                left: 10px;
+                border: 1px solid {{border}};
+                padding: 10px;
+                width: 400px;
+                height: 106px;
+            }
+            #date-client-facture{
+                position: absolute;
+                left: 440px;
+                top:150px;
+                width:600px;
+                border-top:1PX SOLID {{border}};
+                border-left:1PX SOLID {{border}};
+            }
+            th.titre-dcf{
+                padding: 11px 5px;
+                font-weight: bold;
+                border-right:1px solid {{border}};
+                border-bottom: 1px solid {{border}};
+                text-align: left;
+                width:30%;
+            }
+            td.contenu-dcf{
+                padding: 5px;
+                border-right:1px solid {{border}};
+                border-bottom: 1px solid {{border}};
+                text-align: left;
+            }
+            #coordonnees-footer{
+                text-align: center;
+                position: absolute;
+                left: 10px;
+                top: 1280px;
+                padding: 10px;
+                width:920px;
+                border-top: 2px solid {{color}};
+                font-size: 16px;
+            }
+            #lignes-pieces{
+                position: absolute;
+                top:360px;
+                left: 10px;
+                border-top: 1px solid {{border}};
+                width:940px;
+            }
+            #totaux-base-tva{
+                position: absolute;
+                top: 900px;
+                left: 10px;
+                border-top:1PX SOLID {{border}};
+                border-left:1PX SOLID {{border}};
+                width: 300px;
+            }
+            td.tva_porcentage, td.tva_montant{
+                padding: 5px;
+                border-right:1px solid {{border}};
+                border-bottom: 1px solid {{border}};
+                text-align: center;
+                width: 50%;
+            }
+            #totaux-generaux{
+                position: absolute;
+                top: 900px;
+                left: 540px;
+                border-top:1PX SOLID {{border}};
+                border-left:1PX SOLID {{border}};
+                width: 440px;
+            }
+            td.libelle_total_droite{
+                padding: 10px 5px;
+                border-right:1px solid {{border}};
+                border-bottom: 1px solid {{border}};
+                text-align: left;
+                font-weight: bold;
+                width: 50%;
+            }
+            td.donne_total_droite{
+                padding: 10px 5px;
+                border-right:1px solid {{border}};
+                border-bottom: 1px solid {{border}};
+                text-align: left;
+            }
+            #montant-en-toutes-lettre{
+                border: 1px solid {{border}};
+                padding: 10px;
+                width: 450px;
+                position: absolute;
+                left: 10px;
+                top: 1080px;
+                height: 150px;
+            }
+
+            #cachet-signature{
+                border: 1px solid {{border}};
+                padding: 10px;
+                width: 419px;
+                position: absolute;
+                left: 540px;
+                top: 1080px;
+                height: 150px;
+                font-weight: bold;
+            }
+            span.coordonnees{
+                font-weight: bold;
+                color: {{color}};
+            }
+            #typepiececommerciale{
+                font-weight: bold;
+                font-size: 40px;
+                position: absolute;
+                top:300px;
+                left: 10px;
+            }
+            td.ligne_header{
+                font-weight: bold;
+                padding: 5px 10px;
+                border-bottom: 1px solid {{border}};
+                height: 30px;
+            }
+
+            td.line_content{
+
+                height: auto;
+            }
+            .columns{
+                position: absolute;
+                top:360px;
+                left: 10px;
+                border-right: 1px solid {{border}};
+                height: 520px;
+            }
+
+            .columns_final{
+                position: absolute;
+                top:360px;
+                left: 10px;
+                border-right: 1px solid {{border}};
+                border-bottom: 1px solid {{border}};
+                height: 520px;
+            }
+            .margin-fodec{
+                margin-top: 50px;
+            }
+        </style>
+
+        <div id="logo">
+            {% if config.logo is not null %}
+                <img src="{{server}}{{asset('files/Parametres/')}}{{config.logo}}">
+            {% endif %}
+        </div>
+        <div id="coordonnees">
+            <ul id="ul-coordonnees">
+                {%if config.tel != ""%}<li><span class="coordonnees">Tél :</span> {{config.tel}}<br /></li>{%endif%}
+                {%if config.fax != ""%}<li><span class="coordonnees">Fax :</span> {{config.fax}}<br /></li>{%endif%}
+                {%if config.email != ""%}<li><span class="coordonnees">Email :</span> {{config.email}}</li>{%endif%}
+                {%if config.web != ""%}<li><span class="coordonnees">Site web :</span> {{config.web}}</li>{%endif%}
+            </ul>
+        </div>
+        <div id="client-name">
+            <b>{{piece.tierName}}</b>
+            <BR /><BR />
+            {%if piece.tierMf != ""%}
+                <b>Matricule Fiscale :</b> {{piece.tierMf}}</b>
+        {%endif%}<br />
+        {%if piece.tierAdresse != ""%}
+            <b>Adresse : </b>{{piece.tierAdresse}}
+        {%endif%}
+    </div>
+    <table cellpadding="0" cellspacing="0" id="date-client-facture">
+        <tr>
+            <th class="titre-dcf">{{piece.type}} N°</th>
+            <td class="contenu-dcf">
+                {%set prefix=''%}
+                {%if piece.numero != ""%}
+                    {%for i in 0..(3-piece.numero|length)%}
+                        {%set prefix=prefix~'0'%}
+                    {%endfor%}
+                {%endif%}
+                {{prefix}}{{piece.numero}}/{%if piece.date%}{{piece.date|date('Y')}}{%endif%}
+            </td>
+        </tr>
+        <tr>
+            <th class="titre-dcf">Date</th>
+            <td class="contenu-dcf">
+                {%if piece.date%}{{piece.date|date('d/m/Y')}}{%endif%}
+            </td>
+        </tr>
+        <tr>
+            <th class="titre-dcf">Client N°</th>
+            <td class="contenu-dcf">
+                CL-0{{piece.tier.id}}
+            </td>
+        </tr>
+    </table>
+
+    <div id="typepiececommerciale">
+        {{piece.type}}
+    </div>
+
+    <table cellpadding="0" cellspacing="0"  border="1">
+        <col style="width: 40px;" >
+        <col style="">
+        <col style="width: 40px;">
+        <col style="width: 100px;">
+        <col style="width: 40px;">
+        <col style="width: 100px;">
+        <tr>
+            <td  class="ligne_header" style="text-align:center;" >Code</td>
+            <td class="ligne_header" style="text-align:left;">Désignation</td>
+            <td class="ligne_header"  style="text-align:center;">Qté</td>
+            <td class="ligne_header" style="text-align:right; padding-right: 25px;">Prix HT</td>
+            <td class="ligne_header"  style="text-align:center;">TVA(%)</td>
+            <td class="ligne_header"  style="text-align:right;">Total HT</td></tr>
+            {%for ligne in piece.pieceLignes%}
+            <tr>
+                <td valign="top" style="text-align:center;">{{ligne.code}}</td>
+                <td class="line_content" valign="top" style="text-align:left;">{{ligne.name|raw}}</td>
+                <td class="line_content" valign="top" style="text-align:center;">{{ligne.quantite}}</td>
+                <td class="line_content" valign="top" style="text-align:right;  padding-right: 25px;">{%if ligne.prixHt%}{{ligne.prixHt|number_format(3, '.', ' ')}}{%endif%}</td>
+                <td class="line_content" valign="top" style="text-align:center;">{{ligne.tauxTva}}</td>
+                <td class="line_content" valign="top" style="text-align:right;  padding-right: 10px;">{%if ligne.totalHt%}{{ligne.totalHt|number_format(3, '.', ' ')}}{%endif%}</td>
+            </tr>
+        {%endfor%}
+    </table>
+
+    
+
+    <table cellpadding="0" cellspacing="0" id="totaux-base-tva">
+        <tr>
+            <td class="tva_porcentage">
+                <b>TVA</b>
+            </td>
+            <td class="tva_montant">
+                <b>Montant</b>
+            </td>
+        </tr>
+        {%for key,base in base_tva%}
+            {%if base != 0%}
+                <tr>
+                    <td class="tva_porcentage">{{key}}</td>
+                    <td class="tva_montant" nowrap>{%if base%}{{base|number_format(3, '.', ' ')}}{%endif%}</td>
+                </tr>
+            {%else%}
+                <tr>
+                    <td class="tva_porcentage">0.00</td>
+                    <td class="tva_montant" nowrap>0.000</td>
+                </tr>
+            {%endif%}
+        {%endfor%}
+    </table>
+
+    <table cellpadding="0" cellspacing="0" id="totaux-generaux">
+        <tr>
+            <td class="libelle_total_droite">
+                Montant HT
+            </td>
+            <td class="donne_total_droite">{%if piece.montantHt%}{{piece.montantHt|number_format(3, '.', ' ')}} TND{%endif%}</td>
+        </tr>
+        {% if tauxFodec is not null %}
+            <tr>
+                <td class="libelle_total_droite">
+                    Montant FODEC
+                </td>
+                <td class="donne_total_droite">{%if piece.montantFodec%}{{piece.montantFodec|number_format(3, '.', ' ')}} TND{%endif%}</td>
+            </tr>
+        {%endif%}
+        <tr>
+            <td class="libelle_total_droite">
+                Total TVA
+            </td>
+            <td class="donne_total_droite">
+                {%if piece.montantTva%}{{piece.montantTva|number_format(3, '.', ' ')}} TND{%endif%}
+            </td>
+        </tr>
+        <tr>
+            <td class="libelle_total_droite">Droit de Timbre</td>
+            <td class="donne_total_droite">
+                {%if piece.montantTimbre%}{{piece.montantTimbre|number_format(3, '.', ' ')}} TND{%endif%}
+            </td>
+        </tr>
+        <tr>
+            <td class="libelle_total_droite">Montant TTC</td>
+            <td class="donne_total_droite">
+                {%if piece.montantTtc%}{{piece.montantTtc|number_format(3, '.', ' ')}} TND{%endif%}
+            </td>
+        </tr>
+    </table>
+    <div id="montant-en-toutes-lettre" class="margin-fodec">
+        {%if piece.type == "Facture" %}
+            Arrêtée la présente facture la somme de 
+        {%elseif piece.type == "Devis" %}
+            Arrêtée le présent devis la somme de 
+        {%elseif piece.type == "Avoir" %}
+            Arrêtée la présente avoir la somme de 
+        {%endif%}
+        {{montant_en_toute_lettre}}
+    </div>
+    <div id="cachet-signature" class="margin-fodec">
+        Cachet & Signature
+    </div>
+
+    <div id="coordonnees-footer" class="margin-fodec">
+        {%if config.mf != "" %}<b>Code TVA :</b> {{config.mf}} – {%endif%}
+        {%if config.rc != "" %}<b>Registre de commerce :</b> {{config.rc}} – {%endif%}
+        {%if config.cd != "" %}<b>Code en Douane :</b> {{config.cd}}{%endif%}
+        <br />
+        {%if config.adresse != "" %}<b>Adresse :</b> {{config.adresse}}{%endif%}
+    </div>
+
+</body>
+</html>
