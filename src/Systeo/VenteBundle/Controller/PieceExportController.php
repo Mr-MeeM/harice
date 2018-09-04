@@ -22,20 +22,25 @@ class PieceExportController extends Controller {
     /**
      * Finds and displays a piece entity.
      *
-     * @Route("/{testurl", name="testurl")
+     * @Route("/{id}/imprimer", name="piece_export_imprimer_one")
      */
-    public function testttAction() {
-        
-    }
-    /**
-     * Finds and displays a piece entity.
-     *
-     * @Route("/{id}/html2pdf", name="html2pdf")
-     */
-    public function imprimerAction(Piece $piece) {
+    public function imprimerAction(PieceExport $piece) {
         $em = $this->getDoctrine()->getManager();
+        $nb_ligne = count($piece->getPieceExportLignes());
+        $nombre_page = ceil($nb_ligne / 15);
 
-        $html = $this->renderView('SysteoVenteBundle:piece-export:imprimer.html.twig', array(
+        $compt = 1;
+        $nb_page = 1;
+        foreach ($piece->getPieceExportLignes() as $ligne):
+            $tab_ligne_piece[$nb_page][] = $ligne;
+            if ($compt % 15 == 0)
+                $nb_page++;
+            $compt++;
+        endforeach;
+        
+        $html = $this->renderView('SysteoVenteBundle:piece-export:imprimer.html.twig', array( 
+            'tab_ligne_piece' => $tab_ligne_piece,
+            'nombre_page' => $nombre_page,
             'piece' => $piece,
             'config' => $em->getRepository('SysteoConfigBundle:Config')->findOneById(1),
             'server' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']
@@ -52,6 +57,7 @@ class PieceExportController extends Controller {
                 $html2pdf->Output('facture_export.pdf'), 150, array('Content-Type' => 'application/pdf')
         );
     }
+
     /**
      * Lists all piece entities.
      *
@@ -190,31 +196,6 @@ class PieceExportController extends Controller {
         endforeach;
 
         return new \Symfony\Component\HttpFoundation\Response(number_format($totalSolde, 2, '.', ' '));
-    }
-
-
-    /**
-     * Finds and displays a piece entity.
-     *
-     * @Route("/{id}/imprimer", name="piece_export_imprimer_one")
-     * @Security("has_role('ROLE_USER')")
-     */
-    public function imprimerOne1Action(PieceExport $piece) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $html = $this->renderView('SysteoVenteBundle:piece-export:imprimer1.html.twig', array(
-            'piece' => $piece,
-            'config' => $em->getRepository('SysteoConfigBundle:Config')->findOneById(1),
-            'server' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']
-        ));
-
-        return new Response(
-                $this->get('knp_snappy.pdf')->getOutputFromHtml($html), 200, array(
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $piece->getType() . '-' . $piece->getNumero() . '-export.pdf"'
-                )
-        );
     }
 
     /**

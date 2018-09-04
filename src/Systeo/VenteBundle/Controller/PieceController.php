@@ -143,14 +143,26 @@ class PieceController extends Controller {
     /**
      * Finds and displays a piece entity.
      *
-     * @Route("/{id}/html2pdf", name="html2pdf")
+     * @Route("/{id}/imprimer", name="imprimer")
      */
     public function imprimerAction(Piece $piece) {
         $base_tva = [];
 
         $em = $this->getDoctrine()->getManager();
         $conf = $em->getRepository('SysteoConfigBundle:Config')->findOneById(1);
+        $nb_ligne = count($piece->getPieceLignes());
+        $nombre_page = ceil($nb_ligne / 15);
 
+        $compt = 1;
+        $nb_page = 1;
+        foreach ($piece->getPieceLignes() as $ligne):
+            $tab_ligne_piece[$nb_page][] = $ligne;
+            if ($compt % 15 == 0)
+                $nb_page++;
+            $compt++;
+        endforeach;
+//        echo "<pre>".print_r($tab_ligne_piece,1)."</pre>";
+//        exit();
         foreach ($piece->getPieceLignes() as $ligne):
             if (!array_key_exists($ligne->getTauxTva(), $base_tva)) {
                 $base_tva[$ligne->getTauxTva()] = $ligne->getTotalHt() * $ligne->getTauxTva() / 100;
@@ -160,6 +172,8 @@ class PieceController extends Controller {
         endforeach;
 
         $html = $this->renderView('SysteoVenteBundle:piece:imprimer.html.twig', array(
+            'tab_ligne_piece' => $tab_ligne_piece,
+            'nombre_page' => $nombre_page,
             'piece' => $piece,
             'base_tva' => $base_tva,
             'tauxFodec' => $conf->getFodec(),
@@ -167,7 +181,7 @@ class PieceController extends Controller {
             'config' => $em->getRepository('SysteoConfigBundle:Config')->findOneById(1),
             'server' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']
         ));
-
+        $nom_fichier = $piece->getType()."_".$piece->getNumero();
 //on appelle le service html2pdf
         $html2pdf = $this->get('html2pdf_factory')->create('P', 'A4', 'fr', true, 'UTF-8');
 //real : utilise la taille réelle
@@ -176,14 +190,14 @@ class PieceController extends Controller {
         $html2pdf->writeHTML($html);
 //Output envoit le document PDF au navigateur internet
         return new Response(
-                $html2pdf->Output('liste_véhicule.pdf'), 150, array('Content-Type' => 'application/pdf')
+                $html2pdf->Output($nom_fichier.'.pdf'), 150, array('Content-Type' => 'application/pdf')
         );
     }
 
     /**
      * Finds and displays a piece entity.
      *
-     * @Route("/{id}/imprimer", name="piece_imprimer_one")
+     * @Route("/{id}/imprimerone", name="piece_imprimer_one")
      */
     public function imprimerOne1Action(Piece $piece) {
         $base_tva = [];
@@ -205,7 +219,8 @@ class PieceController extends Controller {
             'tauxFodec' => $conf->getFodec(),
             'montant_en_toute_lettre' => $this->getMontantEnTouteLettre($piece->getMontantTtc()),
             'config' => $em->getRepository('SysteoConfigBundle:Config')->findOneById(1),
-            'server' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']
+            'server' => $_SERVER['HTTP_HOST'],
+//            'server' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']
         ));
 
         return new Response(
