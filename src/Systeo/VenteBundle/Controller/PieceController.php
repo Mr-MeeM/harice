@@ -143,7 +143,7 @@ class PieceController extends Controller {
     /**
      * Finds and displays a piece entity.
      *
-     * @Route("/{id}/imprimer", name="imprimer")
+     * @Route("/{id}/imprimer", name="piece_imprimer_one")
      */
     public function imprimerAction(Piece $piece) {
         $base_tva = [];
@@ -194,42 +194,6 @@ class PieceController extends Controller {
         );
     }
 
-    /**
-     * Finds and displays a piece entity.
-     *
-     * @Route("/{id}/imprimerone", name="piece_imprimer_one")
-     */
-    public function imprimerOne1Action(Piece $piece) {
-        $base_tva = [];
-
-        $em = $this->getDoctrine()->getManager();
-        $conf = $em->getRepository('SysteoConfigBundle:Config')->findOneById(1);
-
-        foreach ($piece->getPieceLignes() as $ligne):
-            if (!array_key_exists($ligne->getTauxTva(), $base_tva)) {
-                $base_tva[$ligne->getTauxTva()] = $ligne->getTotalHt() * $ligne->getTauxTva() / 100;
-            } else {
-                $base_tva[$ligne->getTauxTva()] = $base_tva[$ligne->getTauxTva()] + $ligne->getTotalHt() * $ligne->getTauxTva() / 100;
-            }
-        endforeach;
-
-        $html = $this->renderView('SysteoVenteBundle:piece:imprimer1.html.twig', array(
-            'piece' => $piece,
-            'base_tva' => $base_tva,
-            'tauxFodec' => $conf->getFodec(),
-            'montant_en_toute_lettre' => $this->getMontantEnTouteLettre($piece->getMontantTtc()),
-            'config' => $em->getRepository('SysteoConfigBundle:Config')->findOneById(1),
-            'server' => $_SERVER['HTTP_HOST'],
-//            'server' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']
-        ));
-
-        return new Response(
-                $this->get('knp_snappy.pdf')->getOutputFromHtml($html), 200, array(
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $piece->getType() . '-' . $piece->getNumero() . '.pdf"'
-                )
-        );
-    }
 
     /**
      * Finds and displays a piece entity.
